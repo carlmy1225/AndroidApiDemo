@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<citys>
+    <city id='1'>
+        <name>shanghai</name>
+        <citycode>20</citycode>
+    </city>
+
+    <city id='2'>
+        <name>beijing</name>
+        <citycode>21</citycode>
+    </city>
+
+    <city id='3'>
+        <name>shengzhen</name>
+        <citycode>22</citycode>
+    </city>
+
+</citys>
