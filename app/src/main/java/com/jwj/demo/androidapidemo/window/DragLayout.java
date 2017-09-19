@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
- * Description: 描述
+ * 基于Window实现 view的拖拽实现
  * Author: wjxie
  * Date: 2017/9/7
  * Copyright: Ctrip

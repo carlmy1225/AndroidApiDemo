@@ -26,7 +26,6 @@ public class MainActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         List<ActivityInfo> list = getAllRunningActivities(this);
-
         setListAdapter(new ArrayAdapter<ActivityInfo>(this, android.R.layout.simple_expandable_list_item_1, list) {
             @NonNull
             @Override
