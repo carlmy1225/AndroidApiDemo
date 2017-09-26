@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.jwj.demo.androidapidemo.communicate.usb.UsbAct">
+    tools:context="com.jwj.demo.androidapidemo.connection.usb.UsbAct">
 
     <Button
         android:id="@+id/usb_open"

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AndroidApiDemo</string>
+    <string name="title_activity_custom_view">CustomViewActivity</string>
 </resources>

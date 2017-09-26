@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="custom_scroll_bg_view">
+        <attr name="scroll_percent" format="float" />
+        
+
+    </declare-styleable>
+
+
+</resources>

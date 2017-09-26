@@ -12,7 +12,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -37,17 +36,21 @@
         <activity
             android:name=".view_event.ViewAct"
             android:screenOrientation="portrait" />
+        <activity android:name=".connection.usb.UsbAct">
 
-        <activity android:name=".communicate.usb.UsbAct">
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"></action> -->
+            <!-- </intent-filter> -->
 
-            <!--<intent-filter>-->
-            <!--<action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"></action>-->
-            <!--</intent-filter>-->
 
-            <!--<meta-data-->
-            <!--android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"-->
-            <!--android:resource="@xml/accessory_filter" />-->
+            <!-- <meta-data -->
+            <!-- android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" -->
+            <!-- android:resource="@xml/accessory_filter" /> -->
         </activity>
+        <activity
+            android:name=".custom_view.CustomViewActivity"
+            android:label="@string/title_activity_custom_view"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

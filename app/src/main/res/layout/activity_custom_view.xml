@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom_scroll_bg_view="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/temp1"
+    tools:context="com.jwj.demo.androidapidemo.custom_view.CustomViewActivity">
+
+    <com.jwj.demo.androidapidemo.custom_view.CustomNestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.jwj.demo.androidapidemo.custom_view.TopBgView
+            android:id="@+id/top_bg_view"
+            android:layout_width="match_parent"
+            android:background="#00000000"
+            android:orientation="vertical"
+            custom_scroll_bg_view:scroll_percent="0.3"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/top_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@mipmap/ctrip_icon" />
+
+                <LinearLayout
+                    android:id="@+id/icon_view_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:id="@+id/wechat_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@mipmap/icon_sns_wechat" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_sns_wechat"
+                        android:layout_weight="1" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_sns_wechat"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="商量商量的生理上讲多了睡了多久睡了多久了数据的连接速度了山东省宽带缴费卡数据的开发速度是" />
+
+        </com.jwj.demo.androidapidemo.custom_view.TopBgView>
+
+    </com.jwj.demo.androidapidemo.custom_view.CustomNestedScrollView>
+
+
+    <LinearLayout
+        android:id="@+id/top_icon_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        android:padding="10dp"
+        android:background="#aaaaaa" />
+
+
+</FrameLayout>

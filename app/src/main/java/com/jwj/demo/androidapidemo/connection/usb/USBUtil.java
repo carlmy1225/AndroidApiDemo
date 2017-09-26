@@ -1,4 +1,4 @@
-package com.jwj.demo.androidapidemo.communicate.usb;
+package com.jwj.demo.androidapidemo.connection.usb;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
