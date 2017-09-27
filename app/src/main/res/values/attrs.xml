@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <declare-styleable name="custom_scroll_bg_view">
-        <attr name="scroll_percent" format="float" />
-        
+    <declare-styleable name="layer_content">
+        <attr name="top_visible_height" format="dimension" />
+        <attr name="top_visible_view_id" format="reference" />
+        <attr name="quad_arc_size" format="dimension" />
+        <attr name="layer_background_color" format="color" />
 
     </declare-styleable>
 

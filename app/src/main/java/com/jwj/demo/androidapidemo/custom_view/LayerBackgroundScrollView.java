@@ -14,12 +14,11 @@ import com.jwj.demo.androidapidemo.R;
  * Copyright: Ctrip
  */
 
-public class CustomNestedScrollView extends ScrollView {
+public class LayerBackgroundScrollView extends ScrollView {
 
-    private TopBgView topBgView;
-    private int mLastMotionY;
-
+    private LayerContentView topBgView;
     ScrollCallBack scrollCallBack;
+    private int mLastMotionY;
 
 
     public interface ScrollCallBack {
@@ -27,12 +26,12 @@ public class CustomNestedScrollView extends ScrollView {
     }
 
 
-    public CustomNestedScrollView(Context context) {
+    public LayerBackgroundScrollView(Context context) {
         super(context);
         init();
     }
 
-    public CustomNestedScrollView(Context context, AttributeSet attrs) {
+    public LayerBackgroundScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -49,7 +48,7 @@ public class CustomNestedScrollView extends ScrollView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        topBgView = (TopBgView) findViewById(R.id.top_bg_view);
+        topBgView = (LayerContentView) findViewById(R.id.top_bg_view);
     }
 
     @Override
