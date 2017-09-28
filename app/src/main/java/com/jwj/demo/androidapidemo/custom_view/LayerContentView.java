@@ -14,7 +14,6 @@ import android.graphics.PorterDuffXfermode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
@@ -113,22 +112,24 @@ public class LayerContentView extends LinearLayout {
      * @param percent
      */
     public void secureResetQuad(float percent) {
-        if (percent < 0 || percent > 1) {
-            return;
+        if (percent < 0) {
+            percent = 0;
+        } else if (percent > 1) {
+            percent = 1;
         }
         updateQuad(getWidth() / 2, -defQuadHeight * percent / FACTOR);
     }
 
 
     private void updateQuad(float x, float deltaY) {
+        float quadY = mTopVisibleHeight + defQuadHeight + deltaY * FACTOR;
+        float bottomPosition = mTopVisibleHeight + deltaY * FACTOR * 0.5F;
+
         mPath.reset();
         mPath.moveTo(0, 0);
         mPath.lineTo(getWidth(), 0);
-        mPath.lineTo(getWidth(), mTopVisibleHeight);
-
-        float bottom = mTopVisibleHeight + defQuadHeight + deltaY * FACTOR;
-        Log.d("bottom", bottom + "");
-        mPath.quadTo(x, bottom, 0, mTopVisibleHeight);
+        mPath.lineTo(getWidth(), bottomPosition);
+        mPath.quadTo(x, quadY, 0, bottomPosition);
         mPath.close();
         invalidate();
     }

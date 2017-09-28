@@ -7,8 +7,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.jwj.demo.androidapidemo.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +21,7 @@ public class BlueToothAct extends ListActivity implements BlueToothManager.Devic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_blue_tooth);
+//        setContentView(R.layout.activity_blue_tooth);
         blueToothServer = new BlueToothManager();
         mAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, address);
         setListAdapter(mAdapter);

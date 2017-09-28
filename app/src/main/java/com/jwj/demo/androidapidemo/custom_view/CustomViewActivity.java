@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.jwj.demo.androidapidemo.R;
+import com.jwj.demo.androidapidemo.logger.LogUtil;
 
 
 public class CustomViewActivity extends AppCompatActivity {
@@ -40,9 +41,16 @@ public class CustomViewActivity extends AppCompatActivity {
 
                 int toPosition = 0;  //需要滚动到的目标y坐标
                 if (iconViewLayout.getY() - scrollY >= 0) {
-                    float percent = (iconViewLayout.getY() - scrollY - toPosition) * 1.0f / iconViewLayout.getY();
-                    ViewCompat.setAlpha(linearLayout, 1 - percent);
-                    topBgView.secureResetQuad(1 - percent);
+                    float percent = 1 - (iconViewLayout.getY() - scrollY - toPosition) * 1.0f / iconViewLayout.getY();
+                    LogUtil.d("percent = %f", percent);
+
+                    if (percent < 0) {
+                        percent = 0;
+                    } else if (percent > 1) {
+                        percent = 1;
+                    }
+                    ViewCompat.setAlpha(linearLayout, percent);
+                    topBgView.secureResetQuad(percent);
                 }
                 //上滑
                 if (deltaY > 0 && (iconViewLayout.getY() - scrollY <= 0)) {  //由大到小

@@ -1,0 +1,38 @@
+android 8.0更新内容  version=26
+
+文档地址：https://developer.android.com/about/versions/oreo/android-8.0.html?hl=zh-cn#opip
+
+1.用户体验
+    textview 自动调整大小、
+    animatorSet倒播功能与寻道功能
+    可下载字体(可通过ContentProvider提供字体供多个应用使用)
+
+    画中画模式：
+        android:supportsPictureInPicture = true  //支持画中画模式
+        android:resizeableActivity = true       //多窗口模式
+        Activity.enterPictureInPictureMode(PictureInPictureParams args)
+        Activity.setPictureInPictureParams()
+
+    统一的布局外边距和内边距：
+        layout_marginVertical，layout_marginHorizontal，paddingVertical，paddingHorizontal 简化了一些操作
+
+    指针捕获：
+        让鼠标操作
+2.系统
+
+3.媒体增强功能
+
+4.连接
+
+5.共享
+
+6.无障碍功能
+
+7.安全与隐私
+
+8.测试
+
+9.运行时与工具
+
+10.android企业版
+
