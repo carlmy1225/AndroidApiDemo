@@ -11,5 +11,7 @@ import android.os.Bundle;
  */
 
 public interface IRouter {
+    String CONFIG_FILE = "router_config";
+
     void goTo(Context context, String page, Bundle bundle);
 }
