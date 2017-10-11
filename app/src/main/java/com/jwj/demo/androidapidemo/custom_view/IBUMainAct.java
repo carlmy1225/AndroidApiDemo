@@ -16,6 +16,7 @@ import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainAdapter;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainModel;
 import com.jwj.demo.androidapidemo.logger.LogUtil;
 
+import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * Copyright: Ctrip
  */
 
-public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBack {
+public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBack ,IBURecyclerView.ScrollPreCallBack{
 
     IBURecyclerView mRecyclerView;
     Toolbar mToolBar;
@@ -37,8 +38,6 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
 
     int coverTopHeight;
     View wechatIconView;
-
-    float scrollY;
 
 
     @Override
@@ -54,6 +53,7 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setScrollCallBack(this);
+        mRecyclerView.setScrollPreCallBack(this);
 
         coverIconView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -74,6 +74,18 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
     public void onScroll(int scrollY, int deltaY) {
         scrollFloatView(scrollY, deltaY);
     }
+
+    @Override
+    public boolean onPreScroll(int scrollY, int deltaY) {
+        if(topContentView.getScrollY() >= startHeight){
+            return false;
+        }
+
+        topContentView.scrollBy(0, (int) (deltaY * 0.8f));
+        return true;
+    }
+
+    int startHeight = 100;
 
 
     private void scrollFloatView(int scrollY, int deltaY) {
@@ -99,28 +111,48 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
         //设置icon背景透明度
         //alphaIconView(1 - percent, wechatIconView);
 
-        scrollTopView(topContentView, coverTopHeight, deltaY, scrollY);
+        scrollTopView(topContentView, coverTopHeight, 1f, 2f,deltaY);
     }
 
-    public void scrollTopView(View topView, int desHeight, int deltaY, int scrollY) {
-        int stopPosition = scrollY;  //topView.getScrollY();
-        Log.d("scrollY =", "topScrollY:" + topView.getScrollY() + ",scrollY:" + scrollY);
+    int deltaY;
+    int scrollY;
 
 
-        if (deltaY > 0) {   //向上滑,滑动指定位置就停止
+    public void log(int v , String msg){
+        Log.d("scroll_y_" + v, msg);
+    }
+
+
+    public void scrollTopView(View topView, int desHeight, float rateUp ,float rateDown , int distanceY) {
+        float rate = (coverTopHeight - startHeight) *1f /coverTopHeight;
+
+        Log.d("rate:" , rate + "");
+
+        final int deltaY = (int)(distanceY * rateUp * rate);
+        final int stopPosition = scrollY;
+
+        Log.d("scrollY =", "topScrollY:" + topView.getScrollY() + ",stopPosition:" + stopPosition);
+
+
+        if (distanceY > 0) {   //向上滑,滑动指定位置就停止
             if (stopPosition > desHeight) {
                 topView.scrollTo(0, desHeight);
             } else if (stopPosition < desHeight) {
                 if (stopPosition + deltaY > desHeight) {
-                    topView.scrollBy(0, (int) (desHeight - stopPosition));
+                    topView.scrollBy(0, desHeight - stopPosition);
                 } else {
+                    log(2, "deltaY:" + deltaY +", distanceY:" + distanceY);
+
                     topView.scrollBy(0, deltaY);
+
+                    log(1,"topScrollY:" + topView.getScrollY() + ",stopPosition:" + stopPosition);
                 }
             }
         } else {
-            if (stopPosition > desHeight) {
+            if (stopPosition > desHeight) {  // 445  -5, 442  440
                 if (stopPosition + deltaY < desHeight) {
-                    topView.scrollBy(0, desHeight - stopPosition);
+                    topView.scrollBy(0, stopPosition + deltaY - desHeight);
+                }else{
                 }
             } else {
                 if (stopPosition > 0) {
@@ -134,6 +166,8 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
                 }
             }
         }
+
+        scrollY += distanceY;
     }
 
 
@@ -173,13 +207,7 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
      * @return
      */
     public float rateUp(float x) {
-        return 1;
-//        if (x < 0.65f) {  //(0~0.65f)
-//            return 1f; //-2.25f * x * x + 2;
-//        } else if (x <= 1.0f) {
-//            return 0; //-(x - 1) * (x - 1) + 1;
-//        }
-//        return 0;
+        return -2.25f * x * x + 2;
     }
 
 

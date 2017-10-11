@@ -47,11 +47,17 @@ public class IBURecyclerView extends RecyclerView {
 
     private int mLastMotionY;
     ScrollCallBack scrollCallBack;
+    ScrollPreCallBack scrollPreCallBack;
     private int mTotalScrolled = 0;
 
     public interface ScrollCallBack {
         void onScroll(int scrollY, int deltaY);
     }
+
+    public interface ScrollPreCallBack{
+        boolean onPreScroll(int scrollY , int deltaY);
+    }
+
 
     private int coverViewId;
     private View iconViewLayout;
@@ -81,10 +87,12 @@ public class IBURecyclerView extends RecyclerView {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                mTotalScrolled += dy;
+
                 if (scrollCallBack != null) {
                     scrollCallBack.onScroll(mTotalScrolled, dy);
                 }
+
+                mTotalScrolled += dy;
             }
 
             @Override
@@ -114,6 +122,10 @@ public class IBURecyclerView extends RecyclerView {
 
     public int getmTotalScrolled() {
         return mTotalScrolled;
+    }
+
+    public void setScrollPreCallBack(ScrollPreCallBack scrollPreCallBack) {
+        this.scrollPreCallBack = scrollPreCallBack;
     }
 
     private void init() {
@@ -239,13 +251,20 @@ public class IBURecyclerView extends RecyclerView {
                 final int y = (int) ev.getY();
                 int deltaY = mLastMotionY - y;
 
-                if (getScollYDistance() == 0) {   //滑动顶部
-                    if (deltaY < 0) {
-                        secureUpdateQuad(ev.getX(), deltaY);
-                    } else {
-                        canceUpEvent();
+                if(scrollPreCallBack !=null){
+                    boolean b = scrollPreCallBack.onPreScroll(0 ,deltaY);
+                    if(b){
+                        return true;
                     }
                 }
+
+//                if (getScollYDistance() == 0) {   //滑动顶部
+//                    if (deltaY < 0) {
+//                        secureUpdateQuad(ev.getX(), deltaY);
+//                    } else {
+//                        canceUpEvent();
+//                    }
+//                }
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
