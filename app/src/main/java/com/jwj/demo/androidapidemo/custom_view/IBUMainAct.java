@@ -128,10 +128,12 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
 
         Log.d("rate:" , rate + "");
 
-        final int deltaY = (int)(distanceY * rateUp * rate);
+        final int deltaY = (int)(distanceY * rateUp );
         final int stopPosition = scrollY;
 
-        Log.d("scrollY =", "topScrollY:" + topView.getScrollY() + ",stopPosition:" + stopPosition);
+
+
+        log(3, "topScrollY:" + topView.getScrollY() + ",stopPosition:" + stopPosition);
 
 
         if (distanceY > 0) {   //向上滑,滑动指定位置就停止
