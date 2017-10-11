@@ -103,7 +103,9 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
     }
 
     public void scrollTopView(View topView, int desHeight, int deltaY, int scrollY) {
-        float stopPosition = scrollY;  //topView.getScrollY();
+        int stopPosition = scrollY;  //topView.getScrollY();
+        Log.d("scrollY =", "topScrollY:" + topView.getScrollY() + ",scrollY:" + scrollY);
+
 
         if (deltaY > 0) {   //向上滑,滑动指定位置就停止
             if (stopPosition > desHeight) {
@@ -118,14 +120,14 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
         } else {
             if (stopPosition > desHeight) {
                 if (stopPosition + deltaY < desHeight) {
-                    topView.scrollBy(0, desHeight - scrollY);
+                    topView.scrollBy(0, desHeight - stopPosition);
                 }
             } else {
                 if (stopPosition > 0) {
                     if (stopPosition + deltaY > 0) {
                         topView.scrollBy(0, deltaY);
                     } else {
-                        topView.scrollBy(0, -(int) stopPosition);
+                        topView.scrollBy(0, -stopPosition);
                     }
                 } else {
                     topView.scrollTo(0, 0);
