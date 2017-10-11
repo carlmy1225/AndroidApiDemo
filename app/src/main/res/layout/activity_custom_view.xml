@@ -6,12 +6,22 @@
     xmlns:layer_content="http://schemas.android.com/apk/res-auto"
     tools:context="com.jwj.demo.androidapidemo.custom_view.CustomViewActivity">
 
-
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@mipmap/temp1" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/temp1" />
+
+        <com.jwj.demo.androidapidemo.custom_view.LayerContentView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
 
     <com.jwj.demo.androidapidemo.custom_view.LayerBackgroundScrollView
         android:id="@+id/scroll_view"

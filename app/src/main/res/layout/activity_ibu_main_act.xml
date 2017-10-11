@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:layer_content="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/temp1" />
+
+        <com.jwj.demo.androidapidemo.custom_view.IBURecyclerView
+            android:id="@+id/ibu_recycler_view"
+            android:overScrollMode="always"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            layer_content:top_visible_height="200dp"
+            layer_content:layer_background_color="#dddddd"
+            layer_content:top_visible_view_id="@+id/top_content_view" />
+
+
+        <LinearLayout
+            android:id="@+id/top_content_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="55dp"
+                android:gravity="center"
+                android:textColor="#fff"
+                android:textSize="24sp"
+                android:text="Travel at your fingertips!" />
+
+
+            <TableLayout
+                android:id="@+id/cover_icon_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:collapseColumns="3">
+
+                <TableRow>
+
+                    <ImageView
+                        android:id="@+id/wechat_icon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:background="@drawable/icon_circle_bg"
+                        android:src="@mipmap/hotel_icon_hotel_filter_facility_2_normal" />
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:padding="5dp"
+                        android:background="@drawable/icon_circle_bg"
+                        android:src="@mipmap/hotel_icon_hotel_filter_facility_3_normal"
+                        android:layout_weight="1" />
+
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/icon_circle_bg"
+                        android:padding="5dp"
+                        android:src="@mipmap/hotel_icon_hotel_filter_facility_4_normal"
+                        android:layout_weight="1" />
+                </TableRow>
+
+            </TableLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

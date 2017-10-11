@@ -16,7 +16,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import com.jwj.demo.androidapidemo.R;
 
@@ -29,7 +29,7 @@ import com.jwj.demo.androidapidemo.R;
  * Copyright: Ctrip
  */
 
-public class LayerContentView extends LinearLayout {
+public class LayerContentView extends FrameLayout {
 
     private final int MIN_QUAD_HEIGHT = 120; //默认的曲线弧度
     private final float FACTOR = 0.4f;   //滑动因子
@@ -46,6 +46,7 @@ public class LayerContentView extends LinearLayout {
 
     private int defQuadHeight = MIN_QUAD_HEIGHT;  //默认曲线高度
     private int tempQuadHeight;      //弧度拉升的高度
+
 
     public LayerContentView(@NonNull Context context) {
         this(context, null);
