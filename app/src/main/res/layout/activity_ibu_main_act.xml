@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:layer_content="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/temp1" />
+
+    <com.jwj.demo.androidapidemo.custom_view.IBUStickyLayout
+        android:id="@+id/ibu_main_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/temp1" />
 
         <com.jwj.demo.androidapidemo.custom_view.IBURecyclerView
             android:id="@+id/ibu_recycler_view"
@@ -85,6 +86,6 @@
 
         </LinearLayout>
 
-    </FrameLayout>
+    </com.jwj.demo.androidapidemo.custom_view.IBUStickyLayout>
 
-</LinearLayout>
+</FrameLayout>

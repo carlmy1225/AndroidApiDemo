@@ -16,7 +16,6 @@ import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainAdapter;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainModel;
 import com.jwj.demo.androidapidemo.logger.LogUtil;
 
-import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import java.util.List;
  * Copyright: Ctrip
  */
 
-public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBack ,IBURecyclerView.ScrollPreCallBack{
+public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBack, ScrollInterceptCallBack {
 
     IBURecyclerView mRecyclerView;
     Toolbar mToolBar;
@@ -38,12 +37,15 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
 
     int coverTopHeight;
     View wechatIconView;
+    IBUStickyLayout ibuMainView;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ibu_main_act);
+        ibuMainView = (IBUStickyLayout) findViewById(R.id.ibu_main_view);
+
         mRecyclerView = (IBURecyclerView) findViewById(R.id.ibu_recycler_view);
         coverIconView = findViewById(R.id.cover_icon_view);
         topContentView = findViewById(R.id.top_content_view);
@@ -52,8 +54,8 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
         mAdapter = new IBUMainAdapter(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setScrollCallBack(this);
-        mRecyclerView.setScrollPreCallBack(this);
+        ibuMainView.setScrollPreCallBack(this);
+        mRecyclerView.setmInterceptCallBack(this);
 
         coverIconView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
@@ -76,12 +78,15 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
     }
 
     @Override
-    public boolean onPreScroll(int scrollY, int deltaY) {
-        if(topContentView.getScrollY() >= startHeight){
+    public void onPreScroll(int scrollY, int deltaY) {
+        topContentView.scrollBy(0, (int) (deltaY * 0.8f));
+    }
+
+    @Override
+    public boolean isIntercept() {
+        if (topContentView.getScrollY() > startHeight) {
             return false;
         }
-
-        topContentView.scrollBy(0, (int) (deltaY * 0.8f));
         return true;
     }
 
@@ -110,27 +115,29 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
         Log.d("reateUp * deltaY = ", rate * deltaY + ", deltaY =" + deltaY + ",percent = " + percent);
         //设置icon背景透明度
         //alphaIconView(1 - percent, wechatIconView);
-
-        scrollTopView(topContentView, coverTopHeight, 1f, 2f,deltaY);
+        scrollToView(topContentView, coverTopHeight, 1f, 2f, deltaY, scrollY);
     }
 
     int deltaY;
     int scrollY;
 
 
-    public void log(int v , String msg){
+    public void log(int v, String msg) {
         Log.d("scroll_y_" + v, msg);
     }
 
+    private int navigition = 1;
 
-    public void scrollTopView(View topView, int desHeight, float rateUp ,float rateDown , int distanceY) {
-        float rate = (coverTopHeight - startHeight) *1f /coverTopHeight;
+    public void scrollToView(View topView, int desHeight, float rateUp, float rateDown, int distanceY, int scrollY) {
+        float rate = (coverTopHeight - startHeight) * 1f / coverTopHeight;
 
-        Log.d("rate:" , rate + "");
+        Log.d("rate:", rate + "");
 
-        final int deltaY = (int)(distanceY * rateUp );
-        final int stopPosition = scrollY;
+        float y = distanceY * rateUp * rate + (1 - rate) * navigition;
+        navigition *= -1;
 
+        final int deltaY = Math.round(y);
+        final int stopPosition = topView.getScrollY();
 
 
         log(3, "topScrollY:" + topView.getScrollY() + ",stopPosition:" + stopPosition);
@@ -143,18 +150,67 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
                 if (stopPosition + deltaY > desHeight) {
                     topView.scrollBy(0, desHeight - stopPosition);
                 } else {
-                    log(2, "deltaY:" + deltaY +", distanceY:" + distanceY);
+                    log(2, "deltaY:" + deltaY + ", distanceY:" + distanceY);
 
                     topView.scrollBy(0, deltaY);
 
-                    log(1,"topScrollY:" + topView.getScrollY() + ",stopPosition:" + stopPosition);
+                    log(1, "topScrollY:" + topView.getScrollY() + ",stopPosition:" + scrollY);
+                }
+            }
+        } else if (distanceY < 0) {
+            if (scrollY > desHeight) {  // 445  -5, 442  440
+                if (scrollY + deltaY < desHeight) {
+                    topView.scrollBy(0, scrollY + deltaY - desHeight);
+                } else {
+                }
+            } else {
+                if (stopPosition > startHeight) {
+                    if (stopPosition + deltaY > startHeight) {
+                        topView.scrollBy(0, deltaY);
+                    } else {
+                        topView.scrollBy(0, startHeight - stopPosition);
+                    }
+                } else {
+                    topView.scrollTo(0, startHeight);
+                }
+            }
+        }
+
+        scrollY += distanceY;
+    }
+
+
+    public void scrollByView(View topView, int desHeight, float rateUp, float rateDown, int distanceY) {
+        float rate = (coverTopHeight - startHeight) * 1f / coverTopHeight;
+
+        Log.d("rate:", rate + "");
+
+        final int deltaY = Math.round(distanceY * 0.5f + 0.5f);
+        final int stopPosition = scrollY;
+
+
+        log(3, "topScrollY:" + topView.getScrollY() + ",stopPosition:" + stopPosition);
+
+
+        if (distanceY > 0) {   //向上滑,滑动指定位置就停止
+            if (stopPosition > desHeight) {
+                topView.scrollTo(0, desHeight);
+            } else if (stopPosition < desHeight) {
+                if (stopPosition + deltaY > desHeight) {
+                    topView.scrollBy(0, desHeight - stopPosition);
+                } else {
+                    log(2, "deltaY:" + deltaY + ", distanceY:" + distanceY);
+
+                    topView.scrollBy(0, deltaY);
+
+                    log(1, "topScrollY:" + topView.getScrollY() + ",stopPosition:" + stopPosition);
                 }
             }
         } else {
             if (stopPosition > desHeight) {  // 445  -5, 442  440
                 if (stopPosition + deltaY < desHeight) {
                     topView.scrollBy(0, stopPosition + deltaY - desHeight);
-                }else{
+                } else {
                 }
             } else {
                 if (stopPosition > 0) {
@@ -250,11 +306,9 @@ public class IBUMainAct extends BaseAct implements IBURecyclerView.ScrollCallBac
                 if (percent == 1) {
                 } else {
                 }
-                mRecyclerView.secureResetQuad(percent);
             } else {
                 ViewCompat.setAlpha(coverIconView, 1);
 //                coverIconView.setVisibility(View.VISIBLE);
-                mRecyclerView.secureResetQuad(1);
             }
             //上滑
             if (deltaY > 0 && (iconY - scrollY <= 0)) {  //由大到小
