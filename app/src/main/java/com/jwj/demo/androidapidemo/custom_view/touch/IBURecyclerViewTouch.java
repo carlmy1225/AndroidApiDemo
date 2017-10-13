@@ -5,15 +5,13 @@ import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 
 import com.jwj.demo.androidapidemo.R;
-import com.jwj.demo.androidapidemo.custom_view.ScrollInterceptCallBack;
 
 /**
  * Created by jwj on 17/10/13.
  */
-public class IBURecyclerViewTouch extends RecyclerView{
+public class IBURecyclerViewTouch extends RecyclerView {
 
     private final int MIN_QUAD_HEIGHT = 120; //默认的曲线弧度
     private final float FACTOR = 0.4f;   //滑动因子
@@ -41,7 +39,7 @@ public class IBURecyclerViewTouch extends RecyclerView{
         super(context, attrs, defStyleAttr);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.layer_content, defStyleAttr, 0);
-        mTopVisibleHeight = array.getDimensionPixelSize(R.styleable.layer_content_top_visible_height, 0) + 60;
+        mTopVisibleHeight = array.getDimensionPixelSize(R.styleable.layer_content_top_visible_height, 0);
 
         setPadding(0, mTopVisibleHeight, 0, 0);
         setOnScrollListener(new RecyclerView.OnScrollListener() {
