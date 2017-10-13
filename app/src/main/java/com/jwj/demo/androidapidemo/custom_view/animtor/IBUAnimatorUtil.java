@@ -1,4 +1,4 @@
-package com.jwj.demo.androidapidemo.custom_view;
+package com.jwj.demo.androidapidemo.custom_view.animtor;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

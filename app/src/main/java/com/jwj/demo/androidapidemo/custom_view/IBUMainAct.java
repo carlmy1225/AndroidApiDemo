@@ -15,6 +15,7 @@ import com.jwj.demo.androidapidemo.R;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainAdapter;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainModel;
 import com.jwj.demo.androidapidemo.custom_view.animtor.BgImageView;
+import com.jwj.demo.androidapidemo.custom_view.animtor.IBUAnimatorUtil;
 import com.jwj.demo.androidapidemo.custom_view.animtor.IBURecyclerView;
 import com.jwj.demo.androidapidemo.logger.LogUtil;
 
