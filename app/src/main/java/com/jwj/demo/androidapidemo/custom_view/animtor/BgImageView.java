@@ -1,4 +1,4 @@
-package com.jwj.demo.androidapidemo.custom_view;
+package com.jwj.demo.androidapidemo.custom_view.animtor;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -13,25 +13,19 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
 
 import com.jwj.demo.androidapidemo.R;
-import com.jwj.demo.androidapidemo.custom_view.animtor.IBURecyclerView;
-import com.jwj.demo.androidapidemo.custom_view.touch.IBURecyclerViewTouch;
+import com.jwj.demo.androidapidemo.custom_view.ScrollInterceptCallBack;
 
 /**
- * Description: 描述
- * Author: wjxie
- * Date: 2017/10/12
- * Copyright: Ctrip
+ * Created by jwj on 17/10/13.
  */
+public class BgImageView extends FrameLayout{
 
-public class IBUStickyLayout extends FrameLayout {
 
     private final int MIN_QUAD_HEIGHT = 120; //默认的曲线弧度
     private final float FACTOR = 0.4f;   //滑动因子
@@ -50,7 +44,6 @@ public class IBUStickyLayout extends FrameLayout {
     private int tempQuadHeight;      //弧度拉升的高度
 
     private int mLastMotionY;
-    IBURecyclerViewTouch.ScrollCallBack scrollCallBack;
     ScrollInterceptCallBack scrollPreCallBack;
     private int mTotalScrolled = 0;
 
@@ -59,6 +52,8 @@ public class IBUStickyLayout extends FrameLayout {
     private int mLastY = 0;
     private int mLastXIntercept = 0;
     private int mLastYIntercept = 0;
+
+    private int alpha = 255;
 
 
     public interface ScrollCallBack {
@@ -70,15 +65,15 @@ public class IBUStickyLayout extends FrameLayout {
     private View iconViewLayout;
 
 
-    public IBUStickyLayout(Context context) {
+    public BgImageView(Context context) {
         this(context, null);
     }
 
-    public IBUStickyLayout(Context context, @Nullable AttributeSet attrs) {
+    public BgImageView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public IBUStickyLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public BgImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.layer_content, defStyleAttr, 0);
@@ -89,18 +84,7 @@ public class IBUStickyLayout extends FrameLayout {
         init();
     }
 
-    @Override
-    public void onNestedPreScroll(View target, int dx, int dy, int[] consumed) {
-        super.onNestedPreScroll(target, dx, dy, consumed);
-    }
 
-    public int getmTotalScrolled() {
-        return mTotalScrolled;
-    }
-
-    public void setScrollPreCallBack(ScrollInterceptCallBack scrollPreCallBack) {
-        this.scrollPreCallBack = scrollPreCallBack;
-    }
 
     private void init() {
         mScroller = new Scroller(getContext());
@@ -131,12 +115,9 @@ public class IBUStickyLayout extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         iconViewLayout = findViewById(coverViewId);
-        topView = getChildAt(1);
     }
 
-    public void setScrollCallBack(IBURecyclerViewTouch.ScrollCallBack scrollCallBack) {
-        this.scrollCallBack = scrollCallBack;
-    }
+
 
 
     /**
@@ -217,100 +198,12 @@ public class IBUStickyLayout extends FrameLayout {
     }
 
 
-    boolean isSticky;
-    View topView;
-    int topHeight = 100;
-
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        Log.d("touch_intercept_0", ev.getAction() + "");
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
 
-        return super.dispatchTouchEvent(ev);
-    }
-
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean intercepted = false;
-        int x = (int) ev.getX();
-        int y = (int) ev.getY();
-
-        Log.d("touch_intercept_1", ev.getAction() + "");
-
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                intercepted = false;
-                mLastX = x;
-                mLastY = y;
-                mLastXIntercept = x;
-                mLastYIntercept = y;
-                break;
-            case MotionEvent.ACTION_MOVE:
-                int deltaX = x - mLastXIntercept;
-                int deltaY = y - mLastYIntercept;
-                Log.d("touch_intercept_2", scrollPreCallBack.isIntercept() + "");
-
-                if (Math.abs(deltaY) > Math.abs(deltaX)) {
-                    Log.d("topViewY = ", topView.getScrollY() + "");
-                    if (scrollPreCallBack !=null && scrollPreCallBack.isIntercept()) {
-                        intercepted = true;
-                    } else {
-                        intercepted = false;
-                    }
-                } else {
-                    intercepted = false;
-                }
-                break;
-
-            case MotionEvent.ACTION_UP:
-                intercepted = false;
-                mLastXIntercept = mLastYIntercept = 0;
-                break;
-            default:
-                break;
-        }
-
-        mLastX = x;
-        mLastY = y;
-        mLastXIntercept = x;
-        mLastYIntercept = y;
-
-        return intercepted;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mLastMotionY = (int) ev.getY();
-                mLastY = mLastMotionY;
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                final int y = (int) ev.getY();
-                int deltaY = mLastY - y;
-                mLastY = y;
-
-                Log.d("touch_intercept_3", scrollPreCallBack.isIntercept() + "");
-
-                if (scrollPreCallBack.isIntercept() && scrollPreCallBack != null) {
-                    scrollPreCallBack.onPreScroll(0, deltaY);
-                }else{
-//                    requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                canceUpEvent();
-                break;
-        }
-        return true;
-    }
-
-    @Override
-    public void onDraw(Canvas canvas) {
         int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
+        mPaint.setAlpha(alpha);
         canvas.drawPath(mPath, mPaint);
         mPaint.setXfermode(duffXfermode);
         mPaint.setColor(0xffdddddd);
@@ -319,6 +212,34 @@ public class IBUStickyLayout extends FrameLayout {
         }
         canvas.restoreToCount(sc);
     }
+
+
+    public void setCustomAlpha(float alphaPercent){
+        if(alphaPercent < 0){
+            alphaPercent = 0;
+        }
+        if(alphaPercent > 1){
+            alphaPercent = 1;
+        }
+
+        alpha = Math.round(alphaPercent * 255);
+        postInvalidate();
+    }
+
+
+
+
+//    @Override
+//    public void onDraw(Canvas canvas) {
+//        int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
+//        canvas.drawPath(mPath, mPaint);
+//        mPaint.setXfermode(duffXfermode);
+//        mPaint.setColor(0xffdddddd);
+//        if (bgBitmap != null) {
+//            canvas.drawBitmap(bgBitmap, 0, 0, mPaint);
+//        }
+//        canvas.restoreToCount(sc);
+//    }
 
     /**
      * 创建背景颜色

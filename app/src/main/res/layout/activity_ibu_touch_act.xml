@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.jwj.demo.androidapidemo.custom_view.animtor.IBURecyclerView
+        <com.jwj.demo.androidapidemo.custom_view.touch.IBURecyclerViewTouch
             android:id="@+id/ibu_recycler_view"
             android:overScrollMode="always"
             android:layout_width="match_parent"
