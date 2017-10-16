@@ -67,6 +67,9 @@
         <activity android:name=".custom_view.IBUMainTouchAct"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".touch_event.TouchEventActivity"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

@@ -1,8 +1,9 @@
-package com.jwj.demo.androidapidemo.custom_view.animtor;
+package com.jwj.demo.androidapidemo.custom_view.touch;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -26,12 +27,11 @@ import com.jwj.demo.androidapidemo.custom_view.ScrollInterceptCallBack;
  */
 public class BgImageView extends FrameLayout{
 
-
     private final int MIN_QUAD_HEIGHT = 120; //默认的曲线弧度
     private final float FACTOR = 0.4f;   //滑动因子
 
     private Path mPath;
-    private Paint mPaint;
+    private Paint mPaint , bitmapPaint;
     PorterDuffXfermode duffXfermode;
     Bitmap bgBitmap;
     ValueAnimator valueAnimator;
@@ -54,6 +54,8 @@ public class BgImageView extends FrameLayout{
     private int mLastYIntercept = 0;
 
     private int alpha = 255;
+    private Activity activity;
+
 
 
     public interface ScrollCallBack {
@@ -81,6 +83,9 @@ public class BgImageView extends FrameLayout{
         layerColor = array.getColor(R.styleable.layer_content_layer_background_color, 0x00000000);
         resId = array.getResourceId(R.styleable.layer_content_top_visible_view_id, 0);
         mTopVisibleHeight = array.getDimensionPixelSize(R.styleable.layer_content_top_visible_height, 0);
+
+        activity = (Activity) context;
+
         init();
     }
 
@@ -95,8 +100,11 @@ public class BgImageView extends FrameLayout{
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(0xff000000);
+        mPaint.setColor(0xff);
         duffXfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT);
+
+        bitmapPaint = new Paint();
+        bitmapPaint.setAntiAlias(true);
     }
 
 
@@ -104,9 +112,11 @@ public class BgImageView extends FrameLayout{
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (resId > 0) {
-            View view = findViewById(resId);
+            View view = activity.findViewById(resId);
             if (view != null) mTopVisibleHeight = view.getMeasuredHeight();
         }
+
+        mTopVisibleHeight += 100;
         updateQuad(w / 2, 0, 1);
         bgBitmap = createBgBitmap();
     }
@@ -203,12 +213,13 @@ public class BgImageView extends FrameLayout{
         super.dispatchDraw(canvas);
 
         int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
+        mPaint.setColor(0xffff0000);
         mPaint.setAlpha(alpha);
         canvas.drawPath(mPath, mPaint);
-        mPaint.setXfermode(duffXfermode);
-        mPaint.setColor(0xffdddddd);
+
+        bitmapPaint.setXfermode(duffXfermode);
         if (bgBitmap != null) {
-            canvas.drawBitmap(bgBitmap, 0, 0, mPaint);
+            canvas.drawBitmap(bgBitmap, 0, 0, bitmapPaint);
         }
         canvas.restoreToCount(sc);
     }

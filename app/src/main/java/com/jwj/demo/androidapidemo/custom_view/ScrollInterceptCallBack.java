@@ -11,4 +11,7 @@ public interface ScrollInterceptCallBack {
     void onPreScroll(int scrollY, int deltaY);
 
     boolean isIntercept();
+
+    void startUp();
+
 }

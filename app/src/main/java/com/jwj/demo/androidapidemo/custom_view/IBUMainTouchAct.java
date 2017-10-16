@@ -10,7 +10,7 @@ import com.jwj.demo.androidapidemo.BaseAct;
 import com.jwj.demo.androidapidemo.R;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainAdapter;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainModel;
-import com.jwj.demo.androidapidemo.custom_view.animtor.BgImageView;
+import com.jwj.demo.androidapidemo.custom_view.touch.BgImageView;
 import com.jwj.demo.androidapidemo.custom_view.touch.IBURecyclerViewTouch;
 import com.jwj.demo.androidapidemo.custom_view.touch.TouchAnimaUtil;
 
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by jwj on 17/10/13.
  */
-public class IBUMainTouchAct extends BaseAct implements IBURecyclerViewTouch.ScrollCallBack {
+public class IBUMainTouchAct extends BaseAct implements IBURecyclerViewTouch.ScrollCallBack , ScrollInterceptCallBack{
 
     IBURecyclerViewTouch mRecyclerView;
     IBUMainAdapter mAdapter;
@@ -46,9 +46,10 @@ public class IBUMainTouchAct extends BaseAct implements IBURecyclerViewTouch.Scr
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setScrollCallBack(this);
+        mRecyclerView.setInterceptCallBack(this);
 
-        touchAnimaUtil = new TouchAnimaUtil();
-        touchAnimaUtil.init(bgView, topContentView, coverIconView);
+//        touchAnimaUtil = new TouchAnimaUtil();
+//        touchAnimaUtil.init(bgView, topContentView, coverIconView ,mRecyclerView);
 
         loadData();
     }
@@ -56,9 +57,25 @@ public class IBUMainTouchAct extends BaseAct implements IBURecyclerViewTouch.Scr
 
     @Override
     public void onScroll(int scrollY, int deltaY) {
-        touchAnimaUtil.scrollFloatView(scrollY, deltaY);
+//        touchAnimaUtil.scrollFloatView(scrollY, deltaY);
     }
 
+
+    @Override
+    public void onPreScroll(int scrollY, int deltaY) {
+
+    }
+
+    @Override
+    public boolean isIntercept() {
+//        return touchAnimaUtil.isIntercept();
+        return false;
+    }
+
+    @Override
+    public void startUp() {
+//        touchAnimaUtil.startAnimator();
+    }
 
     void loadData() {
         new AsyncTask<String, Void, List<IBUMainModel>>() {

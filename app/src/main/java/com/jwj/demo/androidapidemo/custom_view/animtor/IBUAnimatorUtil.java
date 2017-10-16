@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import com.jwj.demo.androidapidemo.custom_view.touch.BgImageView;
+
 import java.util.ArrayList;
 
 /**

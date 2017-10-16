@@ -1,12 +1,15 @@
 package com.jwj.demo.androidapidemo.custom_view.touch;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-import com.jwj.demo.androidapidemo.custom_view.animtor.BgImageView;
 import com.jwj.demo.androidapidemo.logger.LogUtil;
 
 import java.util.ArrayList;
@@ -28,12 +31,13 @@ public class TouchAnimaUtil {
     int deltaY;
     int scrollY;
     int total;
-    int startHeight = 0;
+    int startHeight = 150;
 
     private View topContentView;
     private BgImageView bgView;
     private View coverIconView;
     private int coverTopHeight;
+    private RecyclerView recyclerView;
 
     private float tempDeltaY;
     private float tempDeltaY2;
@@ -45,10 +49,13 @@ public class TouchAnimaUtil {
     AccelerateDecelerateInterpolator mInterpolator;
 
 
-    public void init(BgImageView bgView, View topContentView, View iconView) {
+
+
+    public void init(BgImageView bgView, View topContentView, View iconView, RecyclerView recyclerView) {
         this.topContentView = topContentView;
         this.bgView = bgView;
         this.coverIconView = iconView;
+        this.recyclerView = recyclerView;
 
 
         coverIconView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
@@ -67,8 +74,122 @@ public class TouchAnimaUtil {
     }
 
 
+
+
+    boolean isEnd;
+    ValueAnimator valueAnimator;
+    public void startAnimator(){
+        if(valueAnimator !=null && valueAnimator.isRunning()){
+            return;
+        }
+
+        if(valueAnimator == null){
+            valueAnimator = ValueAnimator.ofFloat(0, 1);
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float percent = (float) animation.getAnimatedValue();
+                    int y = Math.round(percent * startHeight);
+
+                    Log.d("animator", y + "");
+
+                    if (y > startHeight) {
+                        y = splitHeight;
+                    }
+
+                    topContentView.scrollTo(0 ,y);
+                    ViewCompat.setTranslationY(bgView, -y);
+                }
+            });
+
+            valueAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    isEnd = !isEnd;
+                }
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                }
+            });
+
+            valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            valueAnimator.setDuration(200);
+        }
+
+        if(!isEnd){
+            valueAnimator.start();
+        }else{
+            valueAnimator.reverse();
+        }
+    }
+
+    public boolean isIntercept(){
+        if(valueAnimator !=null && valueAnimator.isRunning()){
+            return true;
+        }
+        return false;
+    }
+
+    void animator(int des){
+        if(valueAnimator !=null && valueAnimator.isRunning()){
+            return;
+        }
+
+        if(valueAnimator == null){
+            valueAnimator = ValueAnimator.ofFloat(0, 1);
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float percent = (float) animation.getAnimatedValue();
+                    int y = Math.round(percent * startHeight);
+
+                    Log.d("animator", y + "");
+
+                    if (y > startHeight) {
+                        y = splitHeight;
+                    }
+
+                    topContentView.scrollTo(0 ,y);
+                    ViewCompat.setTranslationY(bgView, -y);
+                }
+            });
+
+            valueAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    isEnd = !isEnd;
+                }
+
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                }
+            });
+
+            valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+            valueAnimator.setDuration(200);
+        }
+
+        if(!isEnd){
+            valueAnimator.start();
+        }else{
+            valueAnimator.reverse();
+        }
+
+
+    }
+
+
+
+
     private int totalDeltaY;
     private int num = 10;
+    boolean done;
+    int tempScroll;
 
 
     public void scrollFloatView(int scrollY, int deltaY) {
@@ -76,24 +197,57 @@ public class TouchAnimaUtil {
             return;
         }
 
-        float percent = scrollY * 1f / coverTopHeight;
 
-        int result = (int) (percent * coverTopHeight);
+        if(deltaY > 0){
+            deltaY += 2;
+            topContentView.scrollBy(0 , deltaY);
+            if(topContentView.getScrollY() >= coverTopHeight){
 
-        log(2, (int) (percent * coverTopHeight) + "");
 
-        log(1, "percent" + percent + ", deltaY =" + deltaY + ", scrollY =" + scrollY + "result = " + (int) (percent * coverTopHeight));
 
-        if (percent >= 1) {
-            percent = 1;
-            topContentView.scrollTo(0, coverTopHeight);
-        } else {
-            topContentView.scrollTo(0, (int) ((scrollY + deltaY) * mInterpolator.getInterpolation(1 - percent)));
+            }
+
         }
-        log(4, mInterpolator.getInterpolation(percent) + "");
 
 
-        log(3, "scrollY" + scrollY + "new_y = " + scrollY + deltaY * rateUp(percent));
+        return;
+
+
+
+//        float percent = scrollY * 1f / coverTopHeight;
+//        int result = (int) (percent * coverTopHeight);
+//
+//        log(1, "percent" + percent + ", deltaY =" + deltaY + ", scrollY =" + scrollY + "result = " + (int) (percent * coverTopHeight));
+//        log(2, (int) (percent * coverTopHeight) + "");
+//
+//        if(scrollY == 0 && deltaY > 0){
+//            startAnimator();
+//            done = false;
+//        }else if(scrollY <= startHeight && deltaY < 0 && !done){
+//            startAnimator();
+//            done = true;
+//        }
+//
+//        if(topContentView.getScrollY() == startHeight){
+//            tempScroll = scrollY;
+//        }
+//
+//        if(topContentView.getScrollY() >=startHeight){
+//            percent = (coverTopHeight - startHeight) * 1f / (coverTopHeight - tempScroll);
+//            topContentView.scrollBy(0 , (int)(percent * deltaY));
+//        }
+
+
+//        if (percent >= 1) {
+//            percent = 1;
+//            topContentView.scrollTo(0, coverTopHeight);
+//        } else {
+//            topContentView.scrollTo(0, (int) ((scrollY + deltaY)));
+//        }
+//        log(4, mInterpolator.getInterpolation(percent) + "");
+
+
+//        log(3, "scrollY" + scrollY + "new_y = " + scrollY + deltaY * rateUp(percent));
 
 
 //        totalDeltaY += deltaY;

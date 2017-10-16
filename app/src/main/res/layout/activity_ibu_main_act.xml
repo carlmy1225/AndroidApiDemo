@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.jwj.demo.androidapidemo.custom_view.animtor.BgImageView
+    <com.jwj.demo.androidapidemo.custom_view.touch.BgImageView
         android:id="@+id/bg_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         layer_content:top_visible_height="200dp"
-        layer_content:layer_background_color="#ffffff"
+        layer_content:layer_background_color="#dddddd"
         layer_content:top_visible_view_id="@+id/top_content_view">
 
         <ImageView
@@ -20,7 +20,7 @@
             android:scaleType="centerCrop"
             android:src="@mipmap/temp1"/>
 
-    </com.jwj.demo.androidapidemo.custom_view.animtor.BgImageView>
+    </com.jwj.demo.androidapidemo.custom_view.touch.BgImageView>
 
     <FrameLayout
         android:id="@+id/ibu_main_view"
