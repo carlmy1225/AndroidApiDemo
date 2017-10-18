@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -91,6 +92,11 @@ public class IBUTouchRecyclerView extends RecyclerView {
         return manager;
     }
 
+    @Override
+    protected void onMeasure(int widthSpec, int heightSpec) {
+        super.onMeasure(widthSpec, heightSpec);
+        setMeasuredDimension(widthSpec , getResources().getDisplayMetrics().heightPixels);
+    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -99,7 +105,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
             View view = activity.findViewById(resId);
             if (view != null) mTopVisibleHeight = view.getMeasuredHeight();
         }
-        setPadding(getPaddingLeft(), getPaddingTop() + mTopVisibleHeight, getPaddingRight(), getPaddingBottom());
+//        setPadding(getPaddingLeft(), getPaddingTop() + mTopVisibleHeight, getPaddingRight(), getPaddingBottom());
     }
 
     public int getmTotalScrolled() {
@@ -112,8 +118,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
     }
 
     public boolean isScrollEnable() {
-        return true;
-        //return contentLength > getHeight();
+        return contentLength > getHeight();
     }
 
 

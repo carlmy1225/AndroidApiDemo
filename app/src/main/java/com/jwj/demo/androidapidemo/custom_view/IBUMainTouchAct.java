@@ -11,7 +11,6 @@ import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainAdapter;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainModel;
 import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView;
 import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView;
-import com.jwj.demo.androidapidemo.custom_view.touch.TouchAnimaUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ public class IBUMainTouchAct extends BaseAct {
     View topContentView;
     View wechatIconView;
     IBUTouchBgView bgView;
-    TouchAnimaUtil touchAnimaUtil;
 
 
     @Override
@@ -61,7 +59,7 @@ public class IBUMainTouchAct extends BaseAct {
 //                ibuMainModel.itemType = IBUMainAdapter.TYPE_ICON_ITEM;
 //                models.add(ibuMainModel);
 
-                for (int i = 0; i < 9; i++) {
+                for (int i = 0; i < 2; i++) {
                     ibuMainModel = new IBUMainModel();
                     ibuMainModel.itemType = IBUMainAdapter.TYPE_INFO_ITEM;
                     models.add(ibuMainModel);

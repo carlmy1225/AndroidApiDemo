@@ -2,4 +2,10 @@
     <string name="app_name">AndroidApiDemo</string>
     <string name="title_activity_custom_view">CustomViewActivity</string>
     <string name="title_activity_blue_tooth">BlueToothAct</string>
+
+
+    <string name="ibu_touch_recyclerview_tag">ibu_touch_recyclerview</string>
+    <string name="ibu_touch_mainbg_tag">ibu_touch_mainbg_tag</string>
+    <string name="ibu_touch_topview_tag">ibu_touch_topview_tag</string>
+    <string name="ibu_touch_barbgview_tag">ibu_touch_barbgview_tag</string>
 </resources>

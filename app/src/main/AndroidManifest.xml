@@ -51,18 +51,12 @@
             <!-- android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" -->
             <!-- android:resource="@xml/accessory_filter" /> -->
         </activity>
-        <activity
-            android:name=".custom_view.CustomViewActivity"
-            android:label="@string/title_activity_custom_view"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".connection.bluetooth.BlueToothAct"
             android:label="@string/title_activity_blue_tooth"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <activity
-            android:name=".custom_view.IBUMainAct"
-            android:screenOrientation="portrait" />
 
         <activity android:name=".custom_view.IBUMainTouchAct"
             android:screenOrientation="portrait"/>

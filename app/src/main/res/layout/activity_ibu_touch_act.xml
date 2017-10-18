@@ -13,6 +13,7 @@
             android:id="@+id/myctrip_touch_bg_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:tag="@string/ibu_touch_mainbg_tag"
             app:layer_background_color="#F7F7FB"
             app:top_visible_height="200dp"
             app:top_visible_view_id="@+id/top_content_view">
@@ -35,84 +36,31 @@
         <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView
             android:id="@+id/ibu_recycler_view"
             android:nestedScrollingEnabled="true"
+            android:tag="@string/ibu_touch_recyclerview_tag"
             android:overScrollMode="always"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:layout_below="@+id/cover_icon_view"
+            android:layout_below="@+id/top_content_view"
             app:top_visible_view_id="@+id/top_content_view" />
+
 
         <View
             android:id="@+id/top_bg_view"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:tag="@string/ibu_touch_barbgview_tag"
             android:alpha="0"
             android:background="#ffffffff"
             android:paddingBottom="15dp"
             android:paddingTop="15dp" />
 
-        <!--<com.airbnb.lottie.LottieAnimationView-->
-        <!--android:tag="refresh_view"-->
-        <!--android:visibility="gone"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="40dp" />-->
-
         <LinearLayout
             android:id="@+id/top_content_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:tag="@string/ibu_touch_topview_tag"
             android:orientation="vertical">
-
-            <!--<android.support.v7.widget.Toolbar-->
-            <!--android:id="@+id/toolbar"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="?actionBarSize"-->
-            <!--android:background="@color/transparent"-->
-            <!--app:popupTheme="@style/CtripAppTheme.PopupOverlay"-->
-            <!--app:theme="@style/CtripToolBarThemeOverlay">-->
-
-            <!--<RelativeLayout-->
-            <!--android:id="@+id/myctrip_fragment_home_main_msg_rl"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="@dimen/dimen_10dp">-->
-
-            <!--<ImageView-->
-            <!--android:id="@+id/ivMessage"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginRight="@dimen/margin_5"-->
-            <!--android:padding="@dimen/margin_5"-->
-            <!--android:src="@drawable/myctrip_home_icon_message" />-->
-
-            <!--<com.ctrip.ibu.framework.common.i18n.widget.I18nTextView-->
-            <!--android:id="@+id/tvMessageCount"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignRight="@+id/ivMessage"-->
-            <!--android:layout_marginTop="@dimen/margin_5"-->
-            <!--android:background="@drawable/myctrip_orange_badge_bg"-->
-            <!--android:gravity="center"-->
-            <!--android:paddingLeft="3dp"-->
-            <!--android:paddingRight="3dp"-->
-            <!--android:textColor="@color/color_white"-->
-            <!--android:textSize="12sp"-->
-            <!--android:visibility="invisible" />-->
-
-            <!--<ImageView-->
-            <!--android:id="@+id/tvMessageBadge"-->
-            <!--android:layout_width="10dp"-->
-            <!--android:layout_height="10dp"-->
-            <!--android:layout_alignRight="@+id/ivMessage"-->
-            <!--android:layout_marginTop="@dimen/margin_5"-->
-            <!--android:background="@drawable/myctrip_unread_dot_drawable"-->
-            <!--android:gravity="center"-->
-            <!--android:visibility="invisible" />-->
-            <!--</RelativeLayout>-->
-            <!--</android.support.v7.widget.Toolbar>-->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -148,7 +96,7 @@
                         android:padding="8dp"
                         android:src="@mipmap/myctrip_icon_home_hotel" />
 
-                    <com.ctrip.ibu.framework.common.i18n.widget.I18nTextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="13dp"
@@ -173,7 +121,7 @@
                         android:padding="8dp"
                         android:src="@mipmap/myctrip_icon_home_flight" />
 
-                    <com.ctrip.ibu.framework.common.i18n.widget.I18nTextView
+                    <TextView
                         android:id="@+id/i18nTextView5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -199,7 +147,7 @@
                         android:padding="8dp"
                         android:src="@mipmap/myctrip_icon_home_train" />
 
-                    <com.ctrip.ibu.framework.common.i18n.widget.I18nTextView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="13dp"
@@ -211,6 +159,9 @@
             </LinearLayout>
 
         </LinearLayout>
+
+
+
 
     </com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchContainerView>
 
