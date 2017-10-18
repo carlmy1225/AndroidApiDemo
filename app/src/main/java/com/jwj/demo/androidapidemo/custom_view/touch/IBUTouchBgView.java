@@ -17,21 +17,20 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
-import android.widget.Scroller;
+import android.widget.ImageView;
 
 import com.jwj.demo.androidapidemo.R;
-import com.jwj.demo.androidapidemo.custom_view.ScrollInterceptCallBack;
+
 
 /**
  * Created by jwj on 17/10/13.
  */
-public class BgImageView extends FrameLayout{
-
+public class IBUTouchBgView extends FrameLayout {
     private final int MIN_QUAD_HEIGHT = 120; //默认的曲线弧度
     private final float FACTOR = 0.4f;   //滑动因子
 
     private Path mPath;
-    private Paint mPaint , bitmapPaint;
+    private Paint mPaint, bitmapPaint;
     PorterDuffXfermode duffXfermode;
     Bitmap bgBitmap;
     ValueAnimator valueAnimator;
@@ -43,59 +42,34 @@ public class BgImageView extends FrameLayout{
     private int defQuadHeight = MIN_QUAD_HEIGHT;  //默认曲线高度
     private int tempQuadHeight;      //弧度拉升的高度
 
-    private int mLastMotionY;
-    ScrollInterceptCallBack scrollPreCallBack;
-    private int mTotalScrolled = 0;
-
-    private Scroller mScroller;
-    private int mLastX = 0;
-    private int mLastY = 0;
-    private int mLastXIntercept = 0;
-    private int mLastYIntercept = 0;
-
     private int alpha = 255;
     private Activity activity;
 
+    ImageView preView, nextView;
 
 
-    public interface ScrollCallBack {
-        void onScroll(int scrollY, int deltaY);
-    }
-
-
-    private int coverViewId;
-    private View iconViewLayout;
-
-
-    public BgImageView(Context context) {
+    public IBUTouchBgView(Context context) {
         this(context, null);
     }
 
-    public BgImageView(Context context, @Nullable AttributeSet attrs) {
+    public IBUTouchBgView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BgImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public IBUTouchBgView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.layer_content, defStyleAttr, 0);
-        defQuadHeight = array.getDimensionPixelSize(R.styleable.layer_content_quad_arc_size, MIN_QUAD_HEIGHT);
-        layerColor = array.getColor(R.styleable.layer_content_layer_background_color, 0x00000000);
-        resId = array.getResourceId(R.styleable.layer_content_top_visible_view_id, 0);
-        mTopVisibleHeight = array.getDimensionPixelSize(R.styleable.layer_content_top_visible_height, 0);
-
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.IBuTouchView, defStyleAttr, 0);
+        defQuadHeight = array.getDimensionPixelSize(R.styleable.IBuTouchView_quad_arc_size, MIN_QUAD_HEIGHT);
+        layerColor = array.getColor(R.styleable.IBuTouchView_layer_background_color, 0x00000000);
+        resId = array.getResourceId(R.styleable.IBuTouchView_top_visible_view_id, 0);
+        mTopVisibleHeight = array.getDimensionPixelSize(R.styleable.IBuTouchView_top_visible_height, 0);
         activity = (Activity) context;
-
         init();
     }
 
 
-
     private void init() {
-        mScroller = new Scroller(getContext());
-
         setBackgroundColor(0x00000000); //设置为透明，有其他情况要处理，可以去掉
-
         mPath = new Path();
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -117,17 +91,19 @@ public class BgImageView extends FrameLayout{
         }
 
         mTopVisibleHeight += 100;
-        updateQuad(w / 2, 0, 1);
+        updateQuad(w / 2, 0, 1, 0);
         bgBitmap = createBgBitmap();
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        iconViewLayout = findViewById(coverViewId);
+        int count = getChildCount();
+        if (count == 2) {
+            nextView = (ImageView) getChildAt(0);
+            preView = (ImageView) getChildAt(1);
+        }
     }
-
-
 
 
     /**
@@ -139,9 +115,9 @@ public class BgImageView extends FrameLayout{
     public void secureUpdateQuad(float x, float deltaY) {
         if (deltaY < 0) {
             tempQuadHeight = (int) deltaY;
-            updateQuad(x, Math.abs(deltaY), 1);
+            updateQuad(x, Math.abs(deltaY), 1, 0);
         } else {
-            updateQuad(x, 0, 1);
+            updateQuad(x, 0, 1, 0);
             tempQuadHeight = 0;
         }
     }
@@ -157,13 +133,13 @@ public class BgImageView extends FrameLayout{
         } else if (percent > 1) {
             percent = 1;
         }
-        updateQuad(getWidth() / 2, -defQuadHeight * percent / FACTOR, 1 - percent);
+        updateQuad(getWidth() / 2, -defQuadHeight * percent / FACTOR, 1 - percent, 0);
     }
 
 
-    private void updateQuad(float x, float deltaY, float percent) {
-        float quadY = mTopVisibleHeight * percent + defQuadHeight + deltaY * FACTOR;
-        float bottomPosition = mTopVisibleHeight * percent + deltaY * FACTOR * 0.5F;
+    private void updateQuad(float x, float deltaY, float percent, float positionDetalY) {
+        float quadY = mTopVisibleHeight * percent + defQuadHeight + deltaY * FACTOR + positionDetalY;
+        float bottomPosition = mTopVisibleHeight * percent + deltaY * FACTOR * 0.5F + positionDetalY;
 
         mPath.reset();
         mPath.moveTo(0, 0);
@@ -191,7 +167,7 @@ public class BgImageView extends FrameLayout{
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float factor = (float) animation.getAnimatedValue();
                     int temp = (int) (factor * Math.abs(tempQuadHeight));
-                    updateQuad(getWidth() / 2, temp, 1);
+                    updateQuad(getWidth() / 2, temp, 1, 0);
                     postInvalidate();
                 }
             });
@@ -225,11 +201,11 @@ public class BgImageView extends FrameLayout{
     }
 
 
-    public void setCustomAlpha(float alphaPercent){
-        if(alphaPercent < 0){
+    public void setCustomAlpha(float alphaPercent) {
+        if (alphaPercent < 0) {
             alphaPercent = 0;
         }
-        if(alphaPercent > 1){
+        if (alphaPercent > 1) {
             alphaPercent = 1;
         }
 
@@ -238,19 +214,42 @@ public class BgImageView extends FrameLayout{
     }
 
 
+    private float scale, totalDetalY;
 
+    /**
+     * 向下拉动背景图变大
+     * 1.2f
+     *
+     * @param percent
+     */
+    public void downScalePercent(float percent) {
+        if (preView != null) {
+            scale = percent * 1;
+            preView.setScaleX(1 + scale);
+            preView.setScaleY(1 + scale);
+        }
+        totalDetalY = percent * 100;
+        updateQuad(getWidth() / 2, 0, 1, totalDetalY);
+    }
 
-//    @Override
-//    public void onDraw(Canvas canvas) {
-//        int sc = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
-//        canvas.drawPath(mPath, mPaint);
-//        mPaint.setXfermode(duffXfermode);
-//        mPaint.setColor(0xffdddddd);
-//        if (bgBitmap != null) {
-//            canvas.drawBitmap(bgBitmap, 0, 0, mPaint);
-//        }
-//        canvas.restoreToCount(sc);
-//    }
+    /**
+     * 恢复到原始状态
+     *
+     * @param percent
+     */
+    public void autoBackScale(float percent) {
+        if (preView != null) {
+            preView.setScaleX(1 + scale * percent);
+            preView.setScaleY(1 + scale * percent);
+        }
+        updateQuad(getWidth() / 2, 0, 1, percent * totalDetalY);
+
+        if (percent == 0) {
+            scale = 0;
+            totalDetalY = 0;
+        }
+    }
+
 
     /**
      * 创建背景颜色

@@ -3,15 +3,14 @@ package com.jwj.demo.androidapidemo.custom_view;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.jwj.demo.androidapidemo.BaseAct;
 import com.jwj.demo.androidapidemo.R;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainAdapter;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainModel;
-import com.jwj.demo.androidapidemo.custom_view.touch.BgImageView;
-import com.jwj.demo.androidapidemo.custom_view.touch.IBURecyclerViewTouch;
+import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView;
+import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView;
 import com.jwj.demo.androidapidemo.custom_view.touch.TouchAnimaUtil;
 
 import java.util.ArrayList;
@@ -20,14 +19,14 @@ import java.util.List;
 /**
  * Created by jwj on 17/10/13.
  */
-public class IBUMainTouchAct extends BaseAct implements IBURecyclerViewTouch.ScrollCallBack , ScrollInterceptCallBack{
+public class IBUMainTouchAct extends BaseAct {
 
-    IBURecyclerViewTouch mRecyclerView;
+    IBUTouchRecyclerView mRecyclerView;
     IBUMainAdapter mAdapter;
     View coverIconView;
     View topContentView;
     View wechatIconView;
-    BgImageView bgView;
+    IBUTouchBgView bgView;
     TouchAnimaUtil touchAnimaUtil;
 
 
@@ -36,46 +35,17 @@ public class IBUMainTouchAct extends BaseAct implements IBURecyclerViewTouch.Scr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ibu_touch_act);
 
-        bgView = (BgImageView) findViewById(R.id.bg_view);
-        mRecyclerView = (IBURecyclerViewTouch) findViewById(R.id.ibu_recycler_view);
+        bgView = (IBUTouchBgView) findViewById(R.id.bg_view);
+        mRecyclerView = (IBUTouchRecyclerView) findViewById(R.id.ibu_recycler_view);
         coverIconView = findViewById(R.id.cover_icon_view);
         topContentView = findViewById(R.id.top_content_view);
         wechatIconView = findViewById(R.id.wechat_icon);
-
         mAdapter = new IBUMainAdapter(this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setScrollCallBack(this);
-        mRecyclerView.setInterceptCallBack(this);
-
-//        touchAnimaUtil = new TouchAnimaUtil();
-//        touchAnimaUtil.init(bgView, topContentView, coverIconView ,mRecyclerView);
-
+        mRecyclerView.setLinearLayoutManager();
         loadData();
     }
 
-
-    @Override
-    public void onScroll(int scrollY, int deltaY) {
-//        touchAnimaUtil.scrollFloatView(scrollY, deltaY);
-    }
-
-
-    @Override
-    public void onPreScroll(int scrollY, int deltaY) {
-
-    }
-
-    @Override
-    public boolean isIntercept() {
-//        return touchAnimaUtil.isIntercept();
-        return false;
-    }
-
-    @Override
-    public void startUp() {
-//        touchAnimaUtil.startAnimator();
-    }
 
     void loadData() {
         new AsyncTask<String, Void, List<IBUMainModel>>() {

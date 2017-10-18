@@ -1,49 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:layer_content="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.jwj.demo.androidapidemo.custom_view.touch.CustomTouchView
+    <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchContainerView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.jwj.demo.androidapidemo.custom_view.touch.BgImageView
-            android:id="@+id/bg_view"
+        <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView
+            android:id="@+id/myctrip_touch_bg_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            layer_content:top_visible_height="200dp"
-            layer_content:layer_background_color="#F7F7FB"
-            layer_content:top_visible_view_id="@+id/top_content_view">
+            android:layout_height="wrap_content"
+            app:layer_background_color="#F7F7FB"
+            app:top_visible_height="200dp"
+            app:top_visible_view_id="@+id/top_content_view">
 
             <ImageView
+                android:id="@+id/myctrip_touch_next_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/myctrip_touch_pre_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/temp1"/>
+                android:src="@mipmap/myctrip_bg_home" />
 
-        </com.jwj.demo.androidapidemo.custom_view.touch.BgImageView>
+        </com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView>
 
-
-        <com.jwj.demo.androidapidemo.custom_view.touch.IBURecyclerViewTouch
+        <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView
             android:id="@+id/ibu_recycler_view"
+            android:nestedScrollingEnabled="true"
             android:overScrollMode="always"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            layer_content:top_visible_view_id="@+id/top_content_view"/>
-
+            android:layout_below="@+id/cover_icon_view"
+            app:top_visible_view_id="@+id/top_content_view" />
 
         <View
             android:id="@+id/top_bg_view"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:paddingTop="15dp"
+            android:alpha="0"
+            android:background="#ffffffff"
             android:paddingBottom="15dp"
-            android:background="#ffffffff" />
+            android:paddingTop="15dp" />
 
+        <!--<com.airbnb.lottie.LottieAnimationView-->
+        <!--android:tag="refresh_view"-->
+        <!--android:visibility="gone"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="40dp" />-->
 
         <LinearLayout
             android:id="@+id/top_content_view"
@@ -51,99 +64,154 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!--<android.support.v7.widget.Toolbar-->
+            <!--android:id="@+id/toolbar"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="?actionBarSize"-->
+            <!--android:background="@color/transparent"-->
+            <!--app:popupTheme="@style/CtripAppTheme.PopupOverlay"-->
+            <!--app:theme="@style/CtripToolBarThemeOverlay">-->
+
+            <!--<RelativeLayout-->
+            <!--android:id="@+id/myctrip_fragment_home_main_msg_rl"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="@dimen/dimen_10dp">-->
+
+            <!--<ImageView-->
+            <!--android:id="@+id/ivMessage"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="@dimen/margin_5"-->
+            <!--android:padding="@dimen/margin_5"-->
+            <!--android:src="@drawable/myctrip_home_icon_message" />-->
+
+            <!--<com.ctrip.ibu.framework.common.i18n.widget.I18nTextView-->
+            <!--android:id="@+id/tvMessageCount"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignRight="@+id/ivMessage"-->
+            <!--android:layout_marginTop="@dimen/margin_5"-->
+            <!--android:background="@drawable/myctrip_orange_badge_bg"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingLeft="3dp"-->
+            <!--android:paddingRight="3dp"-->
+            <!--android:textColor="@color/color_white"-->
+            <!--android:textSize="12sp"-->
+            <!--android:visibility="invisible" />-->
+
+            <!--<ImageView-->
+            <!--android:id="@+id/tvMessageBadge"-->
+            <!--android:layout_width="10dp"-->
+            <!--android:layout_height="10dp"-->
+            <!--android:layout_alignRight="@+id/ivMessage"-->
+            <!--android:layout_marginTop="@dimen/margin_5"-->
+            <!--android:background="@drawable/myctrip_unread_dot_drawable"-->
+            <!--android:gravity="center"-->
+            <!--android:visibility="invisible" />-->
+            <!--</RelativeLayout>-->
+            <!--</android.support.v7.widget.Toolbar>-->
+
             <TextView
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="60dp"
-                android:layout_marginBottom="55dp"
+                android:layout_marginBottom="37dp"
+                android:layout_marginTop="42dp"
                 android:gravity="center"
+                android:orientation="vertical"
+                android:text="Travel at your fingertips!"
                 android:textColor="#fff"
-                android:textSize="24sp"
-                android:text="Travel at your fingertips!" />
+                android:textSize="24sp" />
 
 
             <LinearLayout
                 android:id="@+id/cover_icon_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp">
+
                 <LinearLayout
-                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
-                    <ImageView
-                        android:id="@+id/wechat_icon"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:padding="8dp"
-                        android:background="@drawable/icon_circle_bg"
-                        android:src="@mipmap/hotel_icon_hotel_filter_facility_2_normal" />
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/myctrip_hotel_icon"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@drawable/icon_circle_bg"
+                        android:padding="8dp"
+                        android:src="@mipmap/myctrip_icon_home_hotel" />
+
+                    <com.ctrip.ibu.framework.common.i18n.widget.I18nTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hotel"
-                        android:layout_marginTop="10dp"
-                        android:textColor="#fff"/>
+                        android:layout_marginTop="13dp"
+                        android:singleLine="true"
+                        android:text="hotel"
+                        android:textColor="#fff" />
 
                 </LinearLayout>
 
-
                 <LinearLayout
-                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
-                    <ImageView
-                        android:id="@+id/wechat_icon_2"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:padding="8dp"
-                        android:background="@drawable/icon_circle_bg"
-                        android:src="@mipmap/hotel_icon_hotel_filter_facility_3_normal" />
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/myctrip_flight_icon"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@drawable/icon_circle_bg"
+                        android:padding="8dp"
+                        android:src="@mipmap/myctrip_icon_home_flight" />
+
+                    <com.ctrip.ibu.framework.common.i18n.widget.I18nTextView
+                        android:id="@+id/i18nTextView5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hotel"
-                        android:layout_marginTop="10dp"
-                        android:textColor="#fff"/>
+                        android:layout_marginTop="13dp"
+                        android:singleLine="true"
+                        android:text="hotel"
+                        android:textColor="#fff" />
 
                 </LinearLayout>
 
-
                 <LinearLayout
-                    android:layout_weight="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
-                    <ImageView
-                        android:id="@+id/wechat_icon_3"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:padding="8dp"
-                        android:background="@drawable/icon_circle_bg"
-                        android:src="@mipmap/hotel_icon_hotel_filter_facility_4_normal" />
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/myctrip_train_icon"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@drawable/icon_circle_bg"
+                        android:padding="8dp"
+                        android:src="@mipmap/myctrip_icon_home_train" />
+
+                    <com.ctrip.ibu.framework.common.i18n.widget.I18nTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Hotel"
-                        android:layout_marginTop="10dp"
-                        android:textColor="#fff"/>
+                        android:layout_marginTop="13dp"
+                        android:singleLine="true"
+                        android:text="hotel"
+                        android:textColor="#fff" />
 
                 </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
 
-
-    </com.jwj.demo.androidapidemo.custom_view.touch.CustomTouchView>
-
+    </com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchContainerView>
 
 </FrameLayout>

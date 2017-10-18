@@ -4,77 +4,57 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ScrollView;
+import android.view.ViewGroup;
 
 import com.jwj.demo.androidapidemo.R;
-import com.jwj.demo.androidapidemo.custom_view.ScrollInterceptCallBack;
-import com.jwj.demo.androidapidemo.logger.LogUtil;
 
 /**
  * Created by jwj on 17/10/13.
  */
-public class IBURecyclerViewTouch extends RecyclerView {
-
-    private final int MIN_QUAD_HEIGHT = 120; //默认的曲线弧度
-    private final float FACTOR = 0.4f;   //滑动因子
+public class IBUTouchRecyclerView extends RecyclerView {
     private int mTopVisibleHeight;   //头部需要挖空的高度
-    ScrollCallBack scrollCallBack;
     private int mTotalScrolled = 0;
-
+    int scrollFlag;         //1表示触摸滚动 ， 3表示触摸之后滑动滚动
     int mLastY;
     int mLastX;
 
-    CustomTouchView vg;
+    IBUTouchContainerView vg;
     int resId;
     Activity activity;
+    int contentLength;
 
-    private ScrollInterceptCallBack interceptCallBack;
 
-    public interface ScrollCallBack {
-        void onScroll(int scrollY, int deltaY);
-    }
-
-    public void setScrollCallBack(ScrollCallBack scrollCallBack) {
-        this.scrollCallBack = scrollCallBack;
-    }
-
-    public void setInterceptCallBack(ScrollInterceptCallBack interceptCallBack) {
-        this.interceptCallBack = interceptCallBack;
-    }
-
-    public IBURecyclerViewTouch(Context context) {
+    public IBUTouchRecyclerView(Context context) {
         this(context, null);
     }
 
-    public IBURecyclerViewTouch(Context context, @Nullable AttributeSet attrs) {
+    public IBUTouchRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public IBURecyclerViewTouch(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public IBUTouchRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.layer_content, defStyleAttr, 0);
-        mTopVisibleHeight = array.getDimensionPixelSize(R.styleable.layer_content_top_visible_height, 0);
-        resId = array.getResourceId(R.styleable.layer_content_top_visible_view_id, 0);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.IBuTouchView, defStyleAttr, 0);
+        mTopVisibleHeight = array.getDimensionPixelSize(R.styleable.IBuTouchView_top_visible_height, 0);
+        resId = array.getResourceId(R.styleable.IBuTouchView_top_visible_view_id, 0);
 
+        setLayoutFrozen(false);
         activity = (Activity) context;
         setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 mTotalScrolled += dy;
-                LogUtil.d("mTotalScrolled = %d , scrollFlag = %s" , mTotalScrolled , scrollFlag);
-
-                if(vg !=null && vg.isShouldIntercepted() && dy<0 && scrollFlag == 3){
+                if (vg != null && vg.isShouldIntercepted() && dy < 0 && scrollFlag == 3) {
                     stopScroll();
                     vg.startAnimator(1);
                 }
-
             }
 
             @Override
@@ -84,6 +64,34 @@ public class IBURecyclerViewTouch extends RecyclerView {
         });
     }
 
+    public LayoutManager setLinearLayoutManager() {
+        LayoutManager manager = new LinearLayoutManager(getContext()) {
+            @Override
+            public void onLayoutCompleted(State state) {
+                super.onLayoutCompleted(state);
+                int childCount = getChildCount();
+                int contentHeight = 0;
+                for (int i = 0; i < childCount; i++) {
+                    contentHeight += getChildAt(i).getHeight();
+                }
+                int totalLength = contentHeight + getPaddingTop() + getPaddingBottom();
+                if (totalLength > getHeight() && contentHeight < getHeight()) {
+                    if (contentHeight < getHeight()) {
+                        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), getHeight() - contentHeight);
+                    } else {
+                        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), 0);
+                    }
+                } else {
+                    setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), 0);
+                }
+                contentLength = contentHeight + getPaddingTop() + getPaddingBottom();
+            }
+        };
+        setLayoutManager(manager);
+        return manager;
+    }
+
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -91,7 +99,7 @@ public class IBURecyclerViewTouch extends RecyclerView {
             View view = activity.findViewById(resId);
             if (view != null) mTopVisibleHeight = view.getMeasuredHeight();
         }
-        setPadding(0, mTopVisibleHeight, 0, 0);
+        setPadding(getPaddingLeft(), getPaddingTop() + mTopVisibleHeight, getPaddingRight(), getPaddingBottom());
     }
 
     public int getmTotalScrolled() {
@@ -99,16 +107,21 @@ public class IBURecyclerViewTouch extends RecyclerView {
     }
 
     @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
+    protected void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count) {
+        super.attachLayoutAnimationParameters(child, params, index, count);
     }
+
+    public boolean isScrollEnable() {
+        return true;
+        //return contentLength > getHeight();
+    }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if(vg ==null){
-            vg = (CustomTouchView)getParent();
+        if (vg == null) {
+            vg = (IBUTouchContainerView) getParent();
         }
-
 
         int x = (int) ev.getX();
         int y = (int) ev.getY();
@@ -118,13 +131,11 @@ public class IBURecyclerViewTouch extends RecyclerView {
                 vg.requestDisallowInterceptTouchEvent(true);
                 scrollFlag = 0;
                 break;
-
             case MotionEvent.ACTION_MOVE:
                 int deltaX = mLastX - x;
                 int deltaY = mLastY - y;
-                if (Math.abs(deltaY) > Math.abs(deltaX) && vg.isIntercepted(deltaY , deltaX)){
+                if (vg.isIntercepted(deltaY, deltaX)) {
                     vg.requestDisallowInterceptTouchEvent(false);
-                    LogUtil.d("dispatchTouchEvent_back");
                     return false;
                 }
                 break;
@@ -135,27 +146,22 @@ public class IBURecyclerViewTouch extends RecyclerView {
         }
         mLastX = x;
         mLastY = y;
+
         return super.dispatchTouchEvent(ev);
     }
 
-
-    int scrollFlag;
-
-
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        int y = (int)e.getY();
-        int x = (int)e.getX();
+        int y = (int) e.getY();
+        int x = (int) e.getX();
 
-        switch (e.getAction()){
+        switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastY = y;
                 mLastX = x;
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                int deltaY = mLastY - y;
-                int deltaX = mLastX - x;
                 scrollFlag = 1;
                 break;
             case MotionEvent.ACTION_CANCEL:
@@ -164,11 +170,7 @@ public class IBURecyclerViewTouch extends RecyclerView {
             case MotionEvent.ACTION_UP:
                 scrollFlag |= 2;
                 break;
-
-
         }
         return super.onTouchEvent(e);
-
-
     }
 }

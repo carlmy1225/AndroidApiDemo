@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <declare-styleable name="layer_content">
+    <declare-styleable name="IBuTouchView">
         <attr name="top_visible_height" format="dimension" />
         <attr name="top_visible_view_id" format="reference" />
         <attr name="quad_arc_size" format="dimension" />
         <attr name="layer_background_color" format="color" />
-
     </declare-styleable>
 
 
