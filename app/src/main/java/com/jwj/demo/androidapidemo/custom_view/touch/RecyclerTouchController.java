@@ -29,10 +29,12 @@ public class RecyclerTouchController {
     float recyclerOldY;
 
     IBUTouchRecyclerView recyclerView;
+    IBUTouchUtilNew touchUtilNew;
 
 
-    public RecyclerTouchController(IBUTouchRecyclerView recyclerView) {
+    public RecyclerTouchController(IBUTouchRecyclerView recyclerView, IBUTouchUtilNew ibuTouchUtilNew) {
         this.recyclerView = recyclerView;
+        this.touchUtilNew = ibuTouchUtilNew;
     }
 
 
@@ -94,6 +96,21 @@ public class RecyclerTouchController {
     }
 
 
+    public boolean isAnimator(int isAutoScrollDirection, boolean isVelocityEnable, int barHeight) {
+        if (getY() > recyclerTopLimitY) {
+            if (isVelocityEnable) {
+                touchUtilNew.startAnimator(isAutoScrollDirection);
+            } else if (recyclerView.getY() >= recyclerTopLimitY - barHeight / 2) {
+                touchUtilNew.startAnimator(IBUTouchUtilNew.AUTO_SCROLL_UP);
+            } else {
+                touchUtilNew.startAnimator(isAutoScrollDirection);
+            }
+            return true;
+        }
+        return false;
+    }
+
+
     /**
      * 提供给父容器，是否可以拦截下拉刷新了
      *
@@ -119,4 +136,6 @@ public class RecyclerTouchController {
             }
         }
     }
+
+
 }

@@ -80,8 +80,8 @@ public class IBUTouchUtilNew extends RecyclerView.OnScrollListener {
         ViewGroup topView = (ViewGroup) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_topview_tag));
         LottieAnimationView refreshView = (LottieAnimationView) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_refresh_tag));
 
-        recyclerTouchController = new RecyclerTouchController(recyclerView);
-        topViewController = new TopViewController(topView);
+        recyclerTouchController = new RecyclerTouchController(recyclerView, this);
+        topViewController = new TopViewController(topView, this);
         refeshController = new RefreshFunctonController(refreshView);
 
         recyclerView.addOnScrollListener(this);
@@ -152,20 +152,11 @@ public class IBUTouchUtilNew extends RecyclerView.OnScrollListener {
      * @param director
      * @return
      */
-    public boolean isAutoScroll(int director, boolean isVelocityEnable, int velocityDirection) {
+    public void isAutoScroll(int director, boolean isVelocityEnable, int velocityDirection) {
         if (!topViewController.animator(isAutoScrollDirection, isVelocityEnable)) {
             if (getTopViewPositionY() == topViewController.getTopHeight()) {        //图标滑动顶部时候
-                if (refeshControllergetY() > recyclerTopLimitY) {
-                    if (isVelocityEnable) {
-                        startAnimator(isAutoScrollDirection);
-                    } else if (recyclerView.getY() >= recyclerTopLimitY - barBgView.getHeight() / 2) {
-                        startAnimator(AUTO_SCROLL_UP);
-                    } else {
-                        startAnimator(isAutoScrollDirection);
-                    }
-                }
+                recyclerTouchController.isAnimator(isAutoScrollDirection, isVelocityEnable, 0);  //barheigth
             } else if (getTopViewPositionY() <= 0) {
-                //下拉刷新处理地方
                 refeshController.isAutoAnimator(topViewController.getTopViewY());
             }
         }
