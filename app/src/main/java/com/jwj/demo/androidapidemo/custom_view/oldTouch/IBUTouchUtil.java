@@ -1,4 +1,4 @@
-package com.jwj.demo.androidapidemo.custom_view.touch;
+package com.jwj.demo.androidapidemo.custom_view.oldTouch;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -7,7 +7,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,17 +31,17 @@ public class IBUTouchUtil {
     /**
      * 自动滚动向下
      */
-    public static final int AUTO_SCROLL_DOWN = -1;
+    final int AUTO_SCROLL_DOWN = -1;
 
     /**
      * 自动滚动向上
      */
-    public static final int AUTO_SCROLL_UP = 1;
+    final int AUTO_SCROLL_UP = 1;
 
     /**
      * 下拉未触发刷新，向上动画
      */
-    public static final int AUTO_REFRESH_UP = 2;
+    final int AUTO_REFRESH_UP = 2;
 
 
     /**
@@ -99,16 +98,14 @@ public class IBUTouchUtil {
 
     IBUTouchBgView mainBgView;
     //    ViewGroup topView;
-//    IBUTouchRecyclerView recyclerView;
+    IBUTouchRecyclerView recyclerView;
     View barBgView;
     List<View> icons = new ArrayList<>();
     private Context mContext;
     RefreshFunction refreshFunction;
-    //    TopScrollFunction topScrollFunction;
+    TopScrollFunction topScrollFunction;
     IBUTouchContainerView parent;
     boolean isInit;
-
-    RecyclerTouchController recyclerController;
 
     /**
      * 刷新回调
@@ -130,29 +127,14 @@ public class IBUTouchUtil {
     public void init(IBUTouchContainerView parent) {
         this.parent = parent;
         mainBgView = (IBUTouchBgView) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_mainbg_tag));
-        IBUTouchRecyclerView recyclerView = (IBUTouchRecyclerView) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_recyclerview_tag));
+        recyclerView = (IBUTouchRecyclerView) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_recyclerview_tag));
         barBgView = parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_barbgview_tag));
         ViewGroup topView = (ViewGroup) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_topview_tag));
         LottieAnimationView refreshView = (LottieAnimationView) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_refresh_tag));
-        recyclerController = new RecyclerTouchController(recyclerView);
-
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                onTouch(dy);
-            }
-        });
 
 
         if (topView != null) {
-//            topScrollFunction = new TopScrollFunction(topView);
+            topScrollFunction = new TopScrollFunction(topView);
         }
 
         if (refreshView != null) {
@@ -161,19 +143,20 @@ public class IBUTouchUtil {
                 float topDistance, recyclerY;
 
                 @Override
-                public void onAnimatorStart() {
-                    topDistance = getTopViewPositionY();
-                    recyclerY = recyclerController.getScrollY();
-                }
-
-                @Override
                 public void onAnimator(float percent) {
                     int topY = (int) (percent * topDistance);
                     scrollTopView(-topY);
+
                     if (mainBgView != null) {
                         mainBgView.autoBackScale(percent);
                     }
-                    recyclerController.scrollRecyclerViewTo(recyclerOldY + (recyclerY - recyclerOldY) * percent);
+                    scrollRecyclerViewTo(recyclerOldY + (recyclerY - recyclerOldY) * percent);
+                }
+
+                @Override
+                public void onAnimatorStart() {
+                    topDistance = getTopViewPositionY();
+                    recyclerY = recyclerView.getY();
                 }
             });
         }
@@ -182,23 +165,23 @@ public class IBUTouchUtil {
 
 
     public void scrollTopView(float y) {
-//        if (topScrollFunction != null) {
-//            android.support.v4.view.ViewCompat.setY(topScrollFunction.getTopView(), y);
-//        }
+        if (topScrollFunction != null) {
+            android.support.v4.view.ViewCompat.setY(topScrollFunction.getTopView(), y);
+        }
     }
 
     public float getTopViewY() {
-//        if (topScrollFunction != null) {
-//            return topScrollFunction.getTopView().getY();
-//        }
+        if (topScrollFunction != null) {
+            return topScrollFunction.getTopView().getY();
+        }
         return 0;
     }
 
 
     private float getTopViewPositionY() {
-//        if (topScrollFunction != null) {
-//            return topScrollFunction.getTopViewY();
-//        }
+        if (topScrollFunction != null) {
+            return topScrollFunction.getTopViewY();
+        }
         return 0;
     }
 
@@ -225,16 +208,38 @@ public class IBUTouchUtil {
                     android.support.v4.view.ViewCompat.setPaddingRelative(barBgView, 0, statusHeight, 0, 0);
                     //
 
-//
-//                    if (topScrollFunction != null) {
-//                        topScrollFunction.init(topHeight);
-//                    }
-//                    recyclerOldY = recyclerView.getPaddingTop() + recyclerView.getY();
+
+                    if (topScrollFunction != null) {
+                        topScrollFunction.init(topHeight);
+                    }
+                    recyclerOldY = recyclerView.getPaddingTop() + recyclerView.getY();
                     recyclerBottomLimitY = recyclerOldY + refreshHeight;
                     recyclerTopLimitY = barBgView.getHeight() - recyclerScrollTo;
                     isInit = true;
                 }
                 parent.getViewTreeObserver().removeOnPreDrawListener(this);
+                return false;
+            }
+        });
+
+
+        coverIconView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                if (topHeight == 0) {
+                    topHeight = (int) coverIconView.getY();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        topHeight -= ViewUtil.getStatusBarHeight(getmContext());
+                    }
+                    if (topScrollFunction != null) {
+                        topScrollFunction.init(topHeight);
+                    }
+
+                    recyclerOldY = recyclerView.getPaddingTop() + recyclerView.getY();
+                    recyclerBottomLimitY = recyclerOldY + refreshHeight;
+                    recyclerTopLimitY = barBgView.getHeight() - recyclerScrollTo;
+                }
+                coverIconView.getViewTreeObserver().removeOnPreDrawListener(this);
                 return false;
             }
         });
@@ -261,9 +266,9 @@ public class IBUTouchUtil {
     public boolean onTouch(int deltaY) {
         final float topScrollY = getTopViewPositionY();
 
-//        if (topScrollFunction != null) {
-//            topScrollFunction.scrollTopView(deltaY, isZeroCanTouchUp(), refreshHeight, recyclerController.isCallPullTopToDown());
-//        }
+        if (topScrollFunction != null) {
+            topScrollFunction.scrollTopView(deltaY, isZeroCanTouchUp(), refreshHeight, recyclerView.getY() > recyclerTopLimitY + barBgView.getHeight());
+        }
 
         if (deltaY > 0) {
             if (topScrollY < 0) {
@@ -276,7 +281,7 @@ public class IBUTouchUtil {
             } else if (topScrollY < topHeight) {
             } else {
             }
-            //todo computeViewPositionRange(recyclerView, recyclerView.getY(), deltaY, recyclerOldY, recyclerTopLimitY);
+            computeViewPositionRange(recyclerView, recyclerView.getY(), deltaY, recyclerOldY, recyclerTopLimitY);
         } else if (deltaY < 0) {
             if (topScrollY <= 0) {
                 deltaY = deltaY / 3;
@@ -285,7 +290,7 @@ public class IBUTouchUtil {
                 return true;
             } else if (topScrollY > 0) {
                 int recyclerDeltaY = (int) (deltaY * 1.3f);
-                //todo computeViewPositionRange(recyclerView, recyclerView.getY(), recyclerDeltaY, recyclerOldY, recyclerTopLimitY);
+                computeViewPositionRange(recyclerView, recyclerView.getY(), recyclerDeltaY, recyclerOldY, recyclerTopLimitY);
             }
         } else {
             return true;
@@ -298,7 +303,7 @@ public class IBUTouchUtil {
 
     private void pullDown(float percent, float scrollY, int deltaY) {
         mainBgView.downScalePercent(percent);
-        //todo computeViewPositionRange(recyclerView, recyclerView.getY(), deltaY, recyclerBottomLimitY, recyclerBottomLimitY - refreshHeight);
+        computeViewPositionRange(recyclerView, recyclerView.getY(), deltaY, recyclerBottomLimitY, recyclerBottomLimitY - refreshHeight);
         if (refreshFunction != null) {
             refreshFunction.pullRefresh(percent, scrollY, deltaY);
         }
@@ -433,7 +438,7 @@ public class IBUTouchUtil {
                 @Override
                 public void onAnimationStart(Animator animation, Object... args) {
                     topDistance = getTopViewPositionY();
-                    topRecycler = recyclerController.getScrollY();  //recyclerView.getY();
+                    topRecycler = recyclerView.getY();
                     up = (int) args[0];
                 }
 
@@ -451,7 +456,7 @@ public class IBUTouchUtil {
                         recyclerY = (int) (percent * (topRecycler - recyclerOldY) * 1.2f);
                     }
 
-                    // todo computeViewPositionRange(recyclerView, topRecycler, recyclerY, recyclerOldY, recyclerTopLimitY);
+                    computeViewPositionRange(recyclerView, topRecycler, recyclerY, recyclerOldY, recyclerTopLimitY);
                     int desY = (int) computeRangeAlpha(topDistance + topY, 0, topHeight);
                     handleEffectAnimtor(desY);
                     scrollTopView(-desY);
@@ -461,6 +466,10 @@ public class IBUTouchUtil {
         animator.start(up);
     }
 
+
+    private void scrollRecyclerViewTo(float scrollY) {
+        android.support.v4.view.ViewCompat.setY(recyclerView, scrollY);
+    }
 
     /**
      * 判断是否自动滚动
@@ -481,15 +490,15 @@ public class IBUTouchUtil {
             }
             return true;
         } else if (getTopViewPositionY() == topHeight) {        //图标滑动顶部时候
-//            if (recyclerView.getY() > recyclerTopLimitY) {
-//                if (isVelocityEnable) {
-//                    startAnimator(isAutoScrollDirection);
-//                } else if (recyclerView.getY() >= recyclerTopLimitY - barBgView.getHeight() / 2) {
-//                    startAnimator(AUTO_SCROLL_UP);
-//                } else {
-//                    startAnimator(isAutoScrollDirection);
-//                }
-//            }
+            if (recyclerView.getY() > recyclerTopLimitY) {
+                if (isVelocityEnable) {
+                    startAnimator(isAutoScrollDirection);
+                } else if (recyclerView.getY() >= recyclerTopLimitY - barBgView.getHeight() / 2) {
+                    startAnimator(AUTO_SCROLL_UP);
+                } else {
+                    startAnimator(isAutoScrollDirection);
+                }
+            }
         } else if (getTopViewPositionY() <= 0) {
             //下拉刷新处理地方
             if (refreshFunction != null) {
@@ -525,7 +534,7 @@ public class IBUTouchUtil {
                 intercepted = true;
             }
         } else if (deltaY < 0) {
-            float scrollY = 0; //recyclerView.getmTotalScrolled();
+            float scrollY = recyclerView.getmTotalScrolled();
             if (scrollY == 0) {
                 intercepted = true;
             } else {
@@ -545,20 +554,21 @@ public class IBUTouchUtil {
      * @return
      */
     public boolean isZeroCanTouchUp() {
-        return recyclerController.isEnoughContent();
+        return recyclerView.isScrollEnable();
     }
 
 
     public boolean isIntercepted(int deltaY, int deltaX) {
         LogUtil.d("touch_util", "isScrollIntercepted = " + isScrollIntercepted(deltaY, deltaX) +
+                ",isScrollEnable = " + recyclerView.isScrollEnable() +
                 ",isRefreshIntercepted =" + isRefreshIntercepted(deltaY, deltaX) +
-                ",deltaY =" + deltaY + ", topviewY = " + getTopViewPositionY());
+                ",deltaY =" + deltaY + ", totalScrolled ==" + recyclerView.getmTotalScrolled() + ", topviewY =" + getTopViewPositionY());
         if (isAnimating()) {
             return true;
         }
 
         if (Math.abs(deltaY) * 0.5f > Math.abs(deltaX)) {
-            return (isScrollIntercepted(deltaY, deltaX))
+            return (isScrollIntercepted(deltaY, deltaX) && recyclerView.isScrollEnable())
                     || isRefreshIntercepted(deltaY, deltaX);
         }
         return false;
@@ -568,6 +578,110 @@ public class IBUTouchUtil {
         return mContext;
     }
 
+
+    public final static class TopScrollFunction {
+        /**
+         * topview滚动的高度
+         */
+        private int topHeight;
+
+        final int TAP = 2;
+
+
+        ViewGroup topView;
+
+        public TopScrollFunction(ViewGroup topView) {
+            this.topView = topView;
+        }
+
+        protected void init(int topHeight) {
+            this.topHeight = topHeight;
+        }
+
+
+        /**
+         * @param deltaY            滑动的y方向的距离，有方向之分
+         * @param isZeroCanTouchUp  在y坐标为0时，是否需要向上滑动
+         * @param refreshHeight     刷新的高度临界值
+         * @param recyclerYToScroll recyclerview滑动到什么时候，可以下滑
+         * @return
+         */
+        public boolean scrollTopView(int deltaY, boolean isZeroCanTouchUp, int refreshHeight, boolean recyclerYToScroll) {
+            final float topScrollY = getTopViewY();
+            if (deltaY > 0) {
+                if (topScrollY < 0) {
+                    if (topScrollY + deltaY > 0) {
+                        android.support.v4.view.ViewCompat.setY(topView, 0);
+                    } else {
+                        android.support.v4.view.ViewCompat.setY(topView, -(topScrollY + deltaY));
+                    }
+                    return true;
+                } else if (topScrollY == 0) {
+                    if (!isZeroCanTouchUp) {
+                        return true;
+                    }
+                    android.support.v4.view.ViewCompat.setY(topView, -deltaY);
+                } else if (topScrollY < topHeight) {
+                    if (topScrollY + deltaY > topHeight) {
+                        android.support.v4.view.ViewCompat.setY(topView, -topHeight);
+                    } else if (topScrollY + deltaY + TAP > topHeight) {
+                        android.support.v4.view.ViewCompat.setY(topView, -topHeight);
+                    } else {
+                        android.support.v4.view.ViewCompat.setY(topView, -(topScrollY + deltaY + TAP));
+                    }
+                } else {
+                    android.support.v4.view.ViewCompat.setY(topView, -topHeight);
+                }
+            } else if (deltaY < 0) {
+                if (topScrollY <= 0) {
+                    //下拉刷新
+                    deltaY = deltaY / 3;
+                    if (Math.abs(topScrollY + deltaY) > refreshHeight) {
+                        android.support.v4.view.ViewCompat.setY(topView, refreshHeight);
+                    } else if (Math.abs(topScrollY + deltaY) <= refreshHeight) {
+                        computeViewPositionRange(topView, topView.getY(), deltaY, refreshHeight, 0);
+                    }
+                    return true;
+                } else if (topScrollY > 0) {
+                    int topDetalY = (int) (deltaY * 0.7f);
+                    if (recyclerYToScroll) {
+                        computeViewPositionRange(topView, topView.getY(), topDetalY, topHeight, 0);
+                    }
+                } else if (topView.getY() >= topHeight) {
+
+                }
+            } else {
+                return true;
+            }
+            return false;
+        }
+
+        private void computeViewPositionRange(View view, float positionY, int deltaY, float maxScroll, float minScroll) {
+            Log.d("position_range", "posistionY =" + positionY + ",deltaY =" + deltaY);
+
+            if (deltaY > 0) {   //向上
+                if (positionY - deltaY < minScroll) {
+                    android.support.v4.view.ViewCompat.setY(view, minScroll);
+                } else {
+                    android.support.v4.view.ViewCompat.setY(view, positionY - deltaY);
+                }
+            } else {
+                if (positionY - deltaY > maxScroll) {
+                    android.support.v4.view.ViewCompat.setY(view, maxScroll);
+                } else {
+                    android.support.v4.view.ViewCompat.setY(view, positionY - deltaY);
+                }
+            }
+        }
+
+        private float getTopViewY() {
+            return -topView.getY();
+        }
+
+        public ViewGroup getTopView() {
+            return topView;
+        }
+    }
 
     /**
      * 下拉刷新控件，控制类

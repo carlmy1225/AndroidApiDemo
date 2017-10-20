@@ -6,28 +6,23 @@
     android:layout_height="match_parent">
 
     <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchContainerView
+        android:id="@+id/myctrip_touch_container_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView
             android:id="@+id/myctrip_touch_bg_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:tag="@string/ibu_touch_mainbg_tag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layer_background_color="#F7F7FB"
             app:top_visible_height="200dp"
             app:top_visible_view_id="@+id/top_content_view">
 
             <ImageView
-                android:id="@+id/myctrip_touch_next_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop" />
-
-            <ImageView
                 android:id="@+id/myctrip_touch_pre_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/myctrip_bg_home" />
 
@@ -35,32 +30,46 @@
 
         <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView
             android:id="@+id/ibu_recycler_view"
-            android:nestedScrollingEnabled="true"
             android:tag="@string/ibu_touch_recyclerview_tag"
+            android:nestedScrollingEnabled="true"
             android:overScrollMode="always"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:layout_below="@+id/top_content_view"
             app:top_visible_view_id="@+id/top_content_view" />
-
 
         <View
             android:id="@+id/top_bg_view"
+            android:tag="@string/ibu_touch_barbgview_tag"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:tag="@string/ibu_touch_barbgview_tag"
             android:alpha="0"
             android:background="#ffffffff"
             android:paddingBottom="15dp"
             android:paddingTop="15dp" />
 
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:tag="@string/ibu_touch_refresh_tag"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
         <LinearLayout
             android:id="@+id/top_content_view"
+            android:tag="@string/ibu_touch_topview_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:tag="@string/ibu_touch_topview_tag"
             android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/myctrip_ctrip_text_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:src="@mipmap/myctrip_home_ctrip_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -73,7 +82,6 @@
                 android:text="Travel at your fingertips!"
                 android:textColor="#fff"
                 android:textSize="24sp" />
-
 
             <LinearLayout
                 android:id="@+id/cover_icon_view"
@@ -93,7 +101,7 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:background="@drawable/icon_circle_bg"
-                        android:padding="8dp"
+                        android:padding="15dp"
                         android:src="@mipmap/myctrip_icon_home_hotel" />
 
                     <TextView
@@ -101,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="13dp"
                         android:singleLine="true"
-                        android:text="hotel"
+                        android:text="@string/key.myctrip.enter.hotels"
                         android:textColor="#fff" />
 
                 </LinearLayout>
@@ -118,7 +126,7 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:background="@drawable/icon_circle_bg"
-                        android:padding="8dp"
+                        android:padding="15dp"
                         android:src="@mipmap/myctrip_icon_home_flight" />
 
                     <TextView
@@ -127,7 +135,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="13dp"
                         android:singleLine="true"
-                        android:text="hotel"
+                        android:text="@string/key.myctrip.enter.flight"
                         android:textColor="#fff" />
 
                 </LinearLayout>
@@ -144,7 +152,7 @@
                         android:layout_width="70dp"
                         android:layout_height="70dp"
                         android:background="@drawable/icon_circle_bg"
-                        android:padding="8dp"
+                        android:padding="15dp"
                         android:src="@mipmap/myctrip_icon_home_train" />
 
                     <TextView
@@ -152,7 +160,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="13dp"
                         android:singleLine="true"
-                        android:text="hotel"
+                        android:text="@string/key.myctrip.enter.trains"
                         android:textColor="#fff" />
 
                 </LinearLayout>
@@ -160,9 +168,26 @@
 
         </LinearLayout>
 
-
-
-
     </com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchContainerView>
+
+    <RelativeLayout
+        android:id="@+id/myctrip_fragment_home_main_msg_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp">
+
+        <ImageView
+            android:id="@+id/ivMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:padding="5dp"
+            android:src="@mipmap/myctrip_home_icon_message" />
+
+    </RelativeLayout>
 
 </FrameLayout>

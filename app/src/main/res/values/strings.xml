@@ -8,4 +8,10 @@
     <string name="ibu_touch_mainbg_tag">ibu_touch_mainbg_tag</string>
     <string name="ibu_touch_topview_tag">ibu_touch_topview_tag</string>
     <string name="ibu_touch_barbgview_tag">ibu_touch_barbgview_tag</string>
+    <string name="ibu_touch_refresh_tag">ibu_touch_refresh_tag</string>
+
+
+    <string name="key.myctrip.enter.flight" value="機票">key.myctrip.enter.flight</string>
+    <string name="key.myctrip.enter.hotels" value="酒店">key.myctrip.enter.hotels</string>
+    <string name="key.myctrip.enter.trains" value="火車票">key.myctrip.enter.trains</string>
 </resources>

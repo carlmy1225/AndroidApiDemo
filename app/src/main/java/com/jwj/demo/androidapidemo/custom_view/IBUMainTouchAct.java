@@ -33,7 +33,7 @@ public class IBUMainTouchAct extends BaseAct {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ibu_touch_act);
 
-        bgView = (IBUTouchBgView) findViewById(R.id.bg_view);
+        bgView = (IBUTouchBgView) findViewById(R.id.myctrip_touch_bg_view);
         mRecyclerView = (IBUTouchRecyclerView) findViewById(R.id.ibu_recycler_view);
         coverIconView = findViewById(R.id.cover_icon_view);
         topContentView = findViewById(R.id.top_content_view);
@@ -41,7 +41,16 @@ public class IBUMainTouchAct extends BaseAct {
         mAdapter = new IBUMainAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLinearLayoutManager();
+
+        bgView.showImage(getResources().getDrawable(R.mipmap.temp3), false);
+
         loadData();
+        bgView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bgView.showImage(getResources().getDrawable(R.mipmap.temp1), true);
+            }
+        }, 2000);
     }
 
 
@@ -59,7 +68,7 @@ public class IBUMainTouchAct extends BaseAct {
 //                ibuMainModel.itemType = IBUMainAdapter.TYPE_ICON_ITEM;
 //                models.add(ibuMainModel);
 
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 8; i++) {
                     ibuMainModel = new IBUMainModel();
                     ibuMainModel.itemType = IBUMainAdapter.TYPE_INFO_ITEM;
                     models.add(ibuMainModel);

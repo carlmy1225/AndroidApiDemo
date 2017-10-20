@@ -1,4 +1,4 @@
-package com.jwj.demo.androidapidemo.custom_view.touch;
+package com.jwj.demo.androidapidemo.custom_view.oldTouch;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -81,15 +81,15 @@ public class IBUTouchContainerView extends FrameLayout {
 
                 break;
             case MotionEvent.ACTION_MOVE:
-//                int deltaX = mLastXIntercept - x;
-//                int deltaY = mLastYIntercept - y;
-//                intercepted = isIntercepted(deltaY, deltaX);
-//
-//                if (intercepted && Math.abs(deltaY) > mTouchSlop) {
-//                    intercepted = true;
-//                } else if (intercepted) {
-//                    intercepted = true;
-//                }
+                int deltaX = mLastXIntercept - x;
+                int deltaY = mLastYIntercept - y;
+                intercepted = isIntercepted(deltaY, deltaX);
+
+                if (intercepted && Math.abs(deltaY) > mTouchSlop) {
+                    intercepted = true;
+                } else if (intercepted) {
+                    intercepted = true;
+                }
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -102,7 +102,7 @@ public class IBUTouchContainerView extends FrameLayout {
         mLastY = y;
         mLastXIntercept = x;
         mLastYIntercept = y;
-        return super.onInterceptTouchEvent(ev);
+        return intercepted;
     }
 
     @Override
@@ -116,13 +116,13 @@ public class IBUTouchContainerView extends FrameLayout {
                 break;
 
             case MotionEvent.ACTION_MOVE:
-//                final int y = (int) ev.getY();
-//                final int x = (int) ev.getX();
-//                int deltaY = mLastY - y;
-//                mLastDirection = deltaY;
-//                mLastY = y;
-//                mVelocityTracker.addMovement(ev);
-//                ibuTouchUtil.onTouch(deltaY);
+                final int y = (int) ev.getY();
+                final int x = (int) ev.getX();
+                int deltaY = mLastY - y;
+                mLastDirection = deltaY;
+                mLastY = y;
+                mVelocityTracker.addMovement(ev);
+                ibuTouchUtil.onTouch(deltaY);
                 break;
             case MotionEvent.ACTION_UP:
                 final VelocityTracker velocityTracker = mVelocityTracker;

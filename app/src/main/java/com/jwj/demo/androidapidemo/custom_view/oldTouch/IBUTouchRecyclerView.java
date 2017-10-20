@@ -1,10 +1,9 @@
-package com.jwj.demo.androidapidemo.custom_view.touch;
+package com.jwj.demo.androidapidemo.custom_view.oldTouch;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -49,7 +48,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
 
         setLayoutFrozen(false);
         activity = (Activity) context;
-        setOnScrollListener(new RecyclerView.OnScrollListener() {
+        setOnScrollListener(new OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -102,7 +101,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
             View view = activity.findViewById(resId);
             if (view != null) mTopVisibleHeight = view.getMeasuredHeight();
         }
-        ViewCompat.setPaddingRelative(this, 0, mTopVisibleHeight, 0, 0);
+        android.support.v4.view.ViewCompat.setY(this, mTopVisibleHeight);
     }
 
     public int getmTotalScrolled() {

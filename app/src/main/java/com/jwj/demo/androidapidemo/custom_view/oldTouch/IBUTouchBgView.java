@@ -1,4 +1,4 @@
-package com.jwj.demo.androidapidemo.custom_view.touch;
+package com.jwj.demo.androidapidemo.custom_view.oldTouch;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
