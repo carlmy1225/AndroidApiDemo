@@ -4,8 +4,13 @@ import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 
-import static com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchUtilNew.AUTO_SCROLL_DOWN;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchController.AUTO_SCROLL_DOWN;
 
 /**
  * Description: 描述
@@ -14,7 +19,7 @@ import static com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchUtilNew.AUTO
  * Copyright: Ctrip
  */
 
-public class TopViewController {
+public class TopViewController{
 
     /**
      * 松开手时向下或向上动画的分割线
@@ -30,18 +35,36 @@ public class TopViewController {
 
 
     ViewGroup topView;
-    IBUTouchUtilNew touchUtilNew;
+    IBUTouchController touchUtilNew;
+    List<View> icons = new ArrayList<>();
 
-    public TopViewController(ViewGroup topView, IBUTouchUtilNew touchUtilNew) {
+    public TopViewController(final ViewGroup topView, final IBUTouchController touchUtilNew) {
         this.topView = topView;
         this.touchUtilNew = touchUtilNew;
+
+        final LinearLayout coverIconView = (LinearLayout) topView.getChildAt(2);
+        if (coverIconView != null) {
+            for (int i = 0; i < coverIconView.getChildCount(); i++) {
+                ViewGroup viewGroup = (ViewGroup) coverIconView.getChildAt(i);
+                for (int j = 0; j < viewGroup.getChildCount(); j++) {
+                    icons.add(viewGroup.getChildAt(j));
+                }
+            }
+        }
+
+        coverIconView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                topHeight = (int)coverIconView.getY();
+                touchUtilNew.setTopHeight(topHeight);
+                coverIconView.getViewTreeObserver().removeOnPreDrawListener(this);
+                return false;
+            }
+        });
+
     }
 
-    protected void init(int topHeight) {
-        this.topHeight = topHeight;
-    }
-
-    private void computeViewPositionRange(View view, float positionY, int deltaY, float maxScroll, float minScroll) {
+    private void computeViewPositionRange(View view, float positionY, float deltaY, float maxScroll, float minScroll) {
         Log.d("position_range", "posistionY =" + positionY + ",deltaY =" + deltaY);
         if (deltaY > 0) {   //向上
             if (positionY - deltaY < minScroll) {
@@ -59,6 +82,10 @@ public class TopViewController {
     }
 
     public float getTopViewY() {
+
+        Log.d("topView_y", topView.getY() + "");
+        Log.d("topView_percent", topView.getY() / topHeight + "");
+
         return -topView.getY();
     }
 
@@ -67,18 +94,13 @@ public class TopViewController {
     }
 
 
-    /**
-     * @param isAutoScrollDirection
-     * @param isVelocityEnable
-     * @param isTouchTopView        表示可以滑动topview了
-     */
-    public boolean animator(int isAutoScrollDirection, boolean isVelocityEnable) {
+    public boolean isAutoAnimator(int isAutoScrollDirection, boolean isVelocityEnable){
         if (getTopViewY() > 0 && getTopViewY() < topHeight) {       //滑动动画，滑到一般时候
-            if (isAutoScrollDirection == IBUTouchUtilNew.AUTO_SCROLL_DOWN) {
-                touchUtilNew.startAnimator(IBUTouchUtilNew.AUTO_SCROLL_DOWN);
+            if (isAutoScrollDirection == com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchController.AUTO_SCROLL_DOWN) {
+                touchUtilNew.startAnimator(com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchController.AUTO_SCROLL_DOWN);
             } else {
                 if (getTopViewY() > animatorHeight || isVelocityEnable) {
-                    touchUtilNew.startAnimator(IBUTouchUtilNew.AUTO_SCROLL_UP);
+                    touchUtilNew.startAnimator(com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchController.AUTO_SCROLL_UP);
                 } else {
                     touchUtilNew.startAnimator(AUTO_SCROLL_DOWN);
                 }
@@ -89,11 +111,29 @@ public class TopViewController {
     }
 
 
+    float topDistance;
+
+    public void animatorStart() {
+        topDistance = getTopViewY();
+    }
+
+    public void animator(float percent, Object... args) {
+        int topY;
+        int up = (int)args[0];
+
+        if (up > 0) {
+            topY = (int) (percent * 1.2f * (topHeight - Math.abs(topDistance)));
+        } else {
+            topY = -(int) (percent * topDistance);
+        }
+        int desY = (int) touchUtilNew.computeRangeAlpha(topDistance + topY, 0, (int) topHeight);
+        ViewCompat.setY(topView, -desY);
+    }
+
+
+
     /**
      * @param deltaY            滑动的y方向的距离，有方向之分
-     * @param isZeroCanTouchUp  在y坐标为0时，是否需要向上滑动
-     * @param refreshHeight     刷新的高度临界值
-     * @param recyclerYToScroll recyclerview滑动到什么时候，可以下滑
      * @return
      */
     public void scrollUp(int deltaY) {
@@ -105,9 +145,7 @@ public class TopViewController {
                 ViewCompat.setY(topView, -(topScrollY + deltaY));
             }
         } else if (topScrollY == 0) {
-//            if (isZeroCanTouchUp) {
-//                ViewCompat.setY(topView, -deltaY);
-//            }
+            ViewCompat.setY(topView, -deltaY);
         } else if (topScrollY < topHeight) {
             if (topScrollY + deltaY > topHeight) {
                 ViewCompat.setY(topView, -topHeight);
@@ -121,36 +159,87 @@ public class TopViewController {
         }
     }
 
-
-    public void scrollDown(int deltaY, boolean recyclerYToScroll) {
+    public void scrollDown(int deltaY) {
         final float topScrollY = getTopViewY();
-        if (topScrollY > 0) {
+        if (topScrollY > 0 && deltaY !=0) {
             int topDetalY = (int) (deltaY * 0.7f);
-            if (recyclerYToScroll) {
-                computeViewPositionRange(topView, topView.getY(), topDetalY, topHeight, 0);
+            computeViewPositionRange(topView, topView.getY(), topDetalY, topHeight, 0);
+
+        }
+    }
+
+
+    public void refreshScroll(float deltaY , int refreshHeight){
+        final float topScrollY = getTopViewY();
+        if (deltaY > 0) {
+            if (topScrollY < 0) {
+                if (topScrollY + deltaY > 0) {
+                    ViewCompat.setY(topView, 0);
+                } else {
+                    ViewCompat.setY(topView, -(topScrollY + deltaY));
+                }
+
+            } else if (topScrollY == 0) {
+                ViewCompat.setY(topView, -deltaY);
+            }
+        } else if (deltaY < 0) {
+            if (topScrollY <= 0) {
+                //下拉刷新
+                deltaY = deltaY / 2;
+                if (Math.abs(topScrollY + deltaY) > refreshHeight) {
+                    ViewCompat.setY(topView, refreshHeight);
+                } else if (Math.abs(topScrollY + deltaY) <= refreshHeight) {
+                    computeViewPositionRange(topView, topView.getY(), deltaY, refreshHeight, 0);
+                }
+            }
+        }
+
+        Log.d("topview_y", topView.getY() + "");
+    }
+
+    public void refreshUp(float deltaY) {
+        float topScrollY = getTopViewY();
+
+        if (topScrollY < 0) {
+            if (topScrollY + deltaY > 0) {
+                ViewCompat.setY(topView, 0);
+            } else {
+                ViewCompat.setY(topView, -(topScrollY + deltaY));
             }
         }
     }
 
-    public void refreshUp(int deltaY) {
-
-    }
-
-    public void refreshDown(int deltaY, int refreshHeight) {
-        final float topScrollY = getTopViewY();
-
+    public void refreshDown(float deltaY, int refreshHeight) {
+        float topScrollY = getTopViewY();
         if (topScrollY <= 0) {
             //下拉刷新
             deltaY = deltaY / 3;
             if (Math.abs(topScrollY + deltaY) > refreshHeight) {
-                ViewCompat.setY(topView, refreshHeight);
+                android.support.v4.view.ViewCompat.setY(topView, refreshHeight);
             } else if (Math.abs(topScrollY + deltaY) <= refreshHeight) {
                 computeViewPositionRange(topView, topView.getY(), deltaY, refreshHeight, 0);
             }
         }
     }
 
-    public int getTopHeight() {
+
+    public void alphaIcons(float percent){
+        for (View view : icons) {
+            int alpha = (int) touchUtilNew.computeRangeAlpha((1 - percent) * 255, 0, 255);
+            if (view.getBackground() != null) {
+                view.getBackground().setAlpha(alpha);
+            } else {
+                view.setAlpha(1 - percent);
+            }
+        }
+    }
+
+    public void scrollToPosition(int y){
+        ViewCompat.setY(topView, y);
+    }
+
+
+    public float getTopHeight() {
         return topHeight;
     }
 }

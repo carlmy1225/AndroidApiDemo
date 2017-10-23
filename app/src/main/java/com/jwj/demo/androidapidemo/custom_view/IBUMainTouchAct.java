@@ -42,15 +42,15 @@ public class IBUMainTouchAct extends BaseAct {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLinearLayoutManager();
 
-        bgView.showImage(getResources().getDrawable(R.mipmap.temp3), false);
+        bgView.showImage(getResources().getDrawable(R.mipmap.myctrip_bg_home), false);
 
         loadData();
-        bgView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                bgView.showImage(getResources().getDrawable(R.mipmap.temp1), true);
-            }
-        }, 2000);
+//        bgView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                bgView.showImage(getResources().getDrawable(R.mipmap.temp1), true);
+//            }
+//        }, 2000);
     }
 
 

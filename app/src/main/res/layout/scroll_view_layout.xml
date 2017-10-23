@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="熟练度法就是两地分居收到了
+                \n法就是登录接收了点击法律手段建立隧道积分老师j
+            水电费老实交代了极乐世界地方了睡觉老师的\n
+            sdflsdjl s"/>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="熟练度法就是两地分居收到了法
+                \n就是登录接收了点击法律手段建立隧道积分老师j
+            水电费老实交代了极乐世界地方了睡觉老师的\n
+            sdflsdjl s"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="熟练度法就是两地分居收到了法就是登录
+                \n接收了点击法律手段建立隧道积分老师j
+            水电费老实交代了极乐世界地方了睡觉老师的\n
+            sdflsdjl s"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="熟练度法就是两地分居收到了法就是登录接收了点击法律手段建立隧道积分老师j
+            水电费老实交代了极乐世界地方了睡觉老师的\n
+            sdflsdjl s"/>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="熟练度法就是两地分居收到了法就是登录接收了点击法律手段建立隧道积分老师j
+            水电费老实交代了极乐世界地方了睡觉老师的\n
+            sdflsdjl s"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="熟练度法就是两地分居收到了法就是登录接收了点击法律手段建立隧道积分老师j
+            水电费老实交代了极乐世界地方了睡觉老师的\n
+            sdflsdjl s"/>
+
+        </LinearLayout>
+
+    </com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchScrollView>
+
+</LinearLayout>

@@ -271,4 +271,8 @@ public class IBUTouchBgView extends FrameLayout {
         canvas.drawColor(layerColor);
         return bgBitmap;
     }
+
+    public int getmTopVisibleHeight() {
+        return mTopVisibleHeight;
+    }
 }

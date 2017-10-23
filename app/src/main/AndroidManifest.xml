@@ -64,6 +64,9 @@
         <activity android:name=".touch_event.TouchEventActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".custom_view.ScrollViewAct"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

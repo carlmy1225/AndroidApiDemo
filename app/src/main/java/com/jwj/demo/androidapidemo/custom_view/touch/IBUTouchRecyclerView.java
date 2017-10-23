@@ -4,16 +4,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.jwj.demo.androidapidemo.R;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -21,16 +30,14 @@ import com.jwj.demo.androidapidemo.R;
  */
 public class IBUTouchRecyclerView extends RecyclerView {
     private int mTopVisibleHeight;   //头部需要挖空的高度
-    private int mTotalScrolled = 0;
-    int scrollFlag;         //1表示触摸滚动 ， 3表示触摸之后滑动滚动
-    int mLastY;
-    int mLastX;
-
-    IBUTouchContainerView vg;
     int resId;
     Activity activity;
-    float oldY;
     boolean isInterceptd = false;
+    IBUTouchController controller;
+    private boolean isInit;
+
+
+    Map<Integer,Integer> childTypeHeight = new HashMap<>();
 
     public IBUTouchRecyclerView(Context context) {
         this(context, null);
@@ -46,25 +53,18 @@ public class IBUTouchRecyclerView extends RecyclerView {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.IBuTouchView, defStyleAttr, 0);
         mTopVisibleHeight = array.getDimensionPixelSize(R.styleable.IBuTouchView_top_visible_height, 0);
         resId = array.getResourceId(R.styleable.IBuTouchView_top_visible_view_id, 0);
-
-        setLayoutFrozen(false);
         activity = (Activity) context;
-        setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                mTotalScrolled += dy;
-                if (vg != null && vg.isShouldIntercepted() && dy < 0 && scrollFlag == 3) {
-                    stopScroll();
-                    vg.startAnimator(1);
-                }
-            }
+        init();
+    }
 
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
+    private void init(){
+    }
+
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        controller = new IBUTouchController(getContext());
     }
 
     public LayoutManager setLinearLayoutManager() {
@@ -90,10 +90,6 @@ public class IBUTouchRecyclerView extends RecyclerView {
         return manager;
     }
 
-    @Override
-    protected void onMeasure(int widthSpec, int heightSpec) {
-        super.onMeasure(widthSpec, heightSpec);
-    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -102,7 +98,14 @@ public class IBUTouchRecyclerView extends RecyclerView {
             View view = activity.findViewById(resId);
             if (view != null) mTopVisibleHeight = view.getMeasuredHeight();
         }
-        ViewCompat.setPaddingRelative(this, 0, mTopVisibleHeight, 0, 0);
+        setPadding(getPaddingLeft(), getPaddingTop() + mTopVisibleHeight, getPaddingRight(), getPaddingBottom());
+    }
+
+
+
+    @Override
+    public void onScrolled(int dx, int dy) {
+        super.onScrolled(dx, dy);
     }
 
     public int getmTotalScrolled() {
@@ -113,94 +116,49 @@ public class IBUTouchRecyclerView extends RecyclerView {
 
         if (firstVisiableChildView != null) {
             int itemHeight = firstVisiableChildView.getHeight();
-
-            int scrollY = (position) * itemHeight - firstVisiableChildView.getTop();
-            Log.d("recycler_scrollY", scrollY + "");
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)firstVisiableChildView.getLayoutParams();
+            if(getAdapter() !=null){
+                int type = getAdapter().getItemViewType(position);
+                itemHeight += params.topMargin + params.bottomMargin;
+                childTypeHeight.put(type , itemHeight);
+            }
+            int scrollY = getTotalHeight(position) - (int)firstVisiableChildView.getTop() + getPaddingTop();
             return scrollY;
         } else {
-            Log.d("recycler_scrollY", 0 + "");
             return 0;
         }
     }
 
-    @Override
-    protected void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count) {
-        super.attachLayoutAnimationParameters(child, params, index, count);
+
+
+    public int getTotalHeight(int position){
+        int total = 0;
+        if(getAdapter() !=null){
+            for(int i=0; i<position; i++){
+                int type = getAdapter().getItemViewType(position);
+                total += childTypeHeight.get(type);
+            }
+        }
+        return total;
     }
+
 
     public boolean isScrollEnable() {
         return isInterceptd;
     }
 
 
-//    @Override
-//    public boolean dispatchTouchEvent(MotionEvent ev) {
-//        if (vg == null) {
-//            vg = (IBUTouchContainerView) getParent();
-//        }
-//
-//        int x = (int) ev.getX();
-//        int y = (int) ev.getY();
-//
-//        switch (ev.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                vg.requestDisallowInterceptTouchEvent(true);
-//                scrollFlag = 0;
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                int deltaX = mLastX - x;
-//                int deltaY = mLastY - y;
-//                if (vg.isIntercepted(deltaY, deltaX)) {
-//                    vg.requestDisallowInterceptTouchEvent(false);
-//                    return false;
-//                }
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                break;
-//            default:
-//                break;
-//        }
-//        mLastX = x;
-//        mLastY = y;
-//
-//        return super.dispatchTouchEvent(ev);
-//    }
-
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        int y = (int) e.getY();
-        int x = (int) e.getX();
-        if (vg == null) {
-            vg = (IBUTouchContainerView) getParent();
+        if(!isInit){
+            controller.init((ViewGroup)getParent());
+            isInit = true;
         }
 
-        switch (e.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mLastY = y;
-                mLastX = x;
-                scrollFlag = 0;
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                scrollFlag = 1;
-                int deltaX = mLastX - x;
-                int deltaY = mLastY - y;
-                mLastY = y;
-
-                if (deltaY < 0 && getmTotalScrolled() == 0) {
-                    vg.requestDisallowInterceptTouchEvent(false);
-                    return false;
-                }
-                break;
-            case MotionEvent.ACTION_CANCEL:
-                e.setAction(MotionEvent.ACTION_UP);
-                return false;
-            case MotionEvent.ACTION_UP:
-                scrollFlag |= 2;
-                break;
+        if(controller.onTouchEvent(e)){
+            return true;
         }
         return super.onTouchEvent(e);
     }
-
 
 }

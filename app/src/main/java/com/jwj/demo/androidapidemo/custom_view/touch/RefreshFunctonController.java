@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
@@ -47,32 +48,90 @@ public class RefreshFunctonController {
     int freshState = STATE_READY;  //刷新的状态
 
     LottieAnimationView refreshView;
-    IBUTouchUtil.ScrollAnimator mScrollAnimator;
+    IBUTouchController.ScrollAnimator mScrollAnimator;
+
+    int mLastMotionY , mLastY;
+
+    IBUTouchController touchController;
+
+    /**
+          * 刷新回调
+     */
+    public interface RefreshCallBack {
+        void onFreshStart();
+
+        void onFreshing();
+
+        void onComplete();
+    }
+
 
     /**
      * 下拉刷新，恢复动画接口
      */
     public interface RecoverCallBack {
-        void onAnimator(float percent);
+        void onRefreshAnimator(float percent);
 
-        void onAnimatorStart();
+        void onRefreshAnimatorStart();
     }
 
 
     /**
      * 下拉刷新回调
      */
-    private IBUTouchUtil.RefreshCallBack refreshCallBack;
+    private RefreshCallBack refreshCallBack;
 
     /**
      * 恢复回调
      */
-    IBUTouchUtil.RefreshFunction.RecoverCallBack recoverCallBack;
+    RecoverCallBack recoverCallBack;
+    boolean isIntercepted;
 
 
-    public RefreshFunctonController(LottieAnimationView refreshView) {
+
+    public RefreshFunctonController(LottieAnimationView refreshView , IBUTouchController touchController) {
         this.refreshView = refreshView;
+        this.touchController = touchController;
         initRefreshAnimation();
+    }
+
+
+
+    public boolean onTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mLastMotionY = (int) ev.getY();
+                mLastY = mLastMotionY;
+                if(touchController.isRefresh()){
+                    isIntercepted = true;
+                }
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                final int y = (int) ev.getY();
+                int deltaY = mLastY - y;
+                mLastY = y;
+                return refresh(deltaY);
+
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                isIntercepted = false;
+                break;
+        }
+        return false;
+    }
+
+    private  boolean refresh(int deltaY) {
+//        if(touchController.getTopViewY() == 0 && isIntercepted){
+//            return true;
+//        }
+
+        if(touchController.isCanrefreshDown(deltaY) && deltaY < 0){
+            touchController.onRefreshScroll(deltaY , refreshHeight);
+            pullRefresh(deltaY + touchController.getTopViewY(),deltaY);
+            return true;
+        }
+        return false;
     }
 
 
@@ -112,14 +171,6 @@ public class RefreshFunctonController {
     }
 
 
-    private float getTopViewPositionY() {
-//        if (topScrollFunction != null) {
-//            return topScrollFunction.getTopViewY();
-//        }
-        return 0;
-    }
-
-
     public void startRefreshAnima() {
         if (freshState == STATE_REFRESHING) {
             return;
@@ -148,7 +199,7 @@ public class RefreshFunctonController {
         }
 
         if (recoverCallBack != null) {
-            recoverCallBack.onAnimatorStart();
+            recoverCallBack.onRefreshAnimatorStart();
         }
 
         if (mScrollAnimator != null && mScrollAnimator.isRunning()) {
@@ -156,21 +207,23 @@ public class RefreshFunctonController {
         }
 
         if (mScrollAnimator == null) {
-            mScrollAnimator = new IBUTouchUtil.ScrollAnimator(300, new AccelerateDecelerateInterpolator(), 1f, 0) {
+            mScrollAnimator = new IBUTouchController.ScrollAnimator(300, new AccelerateDecelerateInterpolator(), 1f, 0) {
                 float refreshY, alpha;
 
                 @Override
                 public void onAnimationStart(Animator animation) {
-                    refreshY = refreshView.getY();
+                    refreshY = touchController.getTopViewY();
                     alpha = refreshView == null ? 0 : refreshView.getAlpha();
+                    touchController.refreshAnimatorStart();
                 }
 
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float percent = (float) animation.getAnimatedValue();
                     if (recoverCallBack != null) {
-                        recoverCallBack.onAnimator(percent);
+                        recoverCallBack.onRefreshAnimator(percent);
                     }
+                    touchController.refreshAnimator(percent);
                     if (refreshView != null && refreshView.getVisibility() == View.VISIBLE && alpha > 0) {
                         ViewCompat.setAlpha(refreshView, percent * alpha);
                         ViewCompat.setY(refreshView, refreshY * percent);
@@ -198,41 +251,49 @@ public class RefreshFunctonController {
         }
     }
 
+
+    public void cancel(){
+        mScrollAnimator.cancel();
+    }
+
+
     /**
      * 下拉刷新向下滑动
-     *
-     * @param percent
      */
-    private void pullRefresh(float percent, float scrollY, int deltaY) {
-        if (refreshView != null) {
-            if (freshState == STATE_REFRESHING || freshState == STATE_START) {
-                android.support.v4.view.ViewCompat.setAlpha(refreshView, percent);
-            } else {
-                if (deltaY < 0) {
-                    if (percent >= 0.9f) {
-                        refreshView.setVisibility(View.VISIBLE);
-                        android.support.v4.view.ViewCompat.setAlpha(refreshView, percent);
-                    } else {
-                        android.support.v4.view.ViewCompat.setAlpha(refreshView, percent);
-                    }
-                } else {
-                    android.support.v4.view.ViewCompat.setAlpha(refreshView, percent);
-                }
+    private void pullRefresh( float scrollY, int deltaY) {
+        float percent = scrollY/refreshHeight;
+        ViewCompat.setY(refreshView, -scrollY);
 
-                if (percent == 0) {
-                    refreshView.setVisibility(View.GONE);
+        if (freshState == STATE_REFRESHING || freshState == STATE_START) {
+            ViewCompat.setAlpha(refreshView, percent);
+        } else {
+            if (deltaY < 0) {
+                if (percent >= 0.9f) {
+                    refreshView.setVisibility(View.VISIBLE);
+                    ViewCompat.setAlpha(refreshView, percent);
+                } else {
+                    ViewCompat.setAlpha(refreshView, percent);
                 }
+            } else {
+                ViewCompat.setAlpha(refreshView, percent);
             }
-            android.support.v4.view.ViewCompat.setY(refreshView, scrollY);
+
+            if (percent == 0) {
+                refreshView.setVisibility(View.GONE);
+            }
         }
     }
 
-    public void setRefreshCallBack(IBUTouchUtil.RefreshCallBack refreshCallBack) {
+    public void setRefreshCallBack(RefreshCallBack refreshCallBack) {
         this.refreshCallBack = refreshCallBack;
     }
 
-    public void setRecoverCallBack(IBUTouchUtil.RefreshFunction.RecoverCallBack recoverCallBack) {
+    public void setRecoverCallBack(RecoverCallBack recoverCallBack) {
         this.recoverCallBack = recoverCallBack;
     }
 
+
+    public int getRefreshHeight() {
+        return refreshHeight;
+    }
 }
