@@ -40,12 +40,14 @@ public class IBUTouchBgView extends FrameLayout {
     private int layerColor;   //背景色
     private int resId;  //使用view，来挖空头部的高度
     private int mTopVisibleHeight;   //头部需要挖空的高度
+    private int offsetHeight = 100;        //头部额外的高度
     private int defQuadHeight = MIN_QUAD_HEIGHT;  //默认曲线高度
     private int tempQuadHeight;      //弧度拉升的高度
     private int alpha = 255;
     private Activity activity;
     private ImageView preView;
-    private float scale, totalDetalY;
+    private float maxScale = 0.3f;  //允许缩放的范围
+    private float maxPullHeight = 150;  //允许拉大高度范围
 
 
     public IBUTouchBgView(Context context) {
@@ -82,6 +84,17 @@ public class IBUTouchBgView extends FrameLayout {
     }
 
 
+    public void setDefQuadHeight(int defQuadHeight) {
+        this.defQuadHeight = defQuadHeight;
+        postInvalidate();
+    }
+
+
+    public void setOffsetHeight(int offsetHeight) {
+        this.offsetHeight = offsetHeight;
+        postInvalidate();
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -89,8 +102,6 @@ public class IBUTouchBgView extends FrameLayout {
             View view = activity.findViewById(resId);
             if (view != null) mTopVisibleHeight = view.getMeasuredHeight();
         }
-
-        mTopVisibleHeight += 100;
         updateQuad(w / 2, 0, 1, 0);
         bgBitmap = createBgBitmap();
     }
@@ -135,23 +146,23 @@ public class IBUTouchBgView extends FrameLayout {
     }
 
     /**
-     * 根据百分比重置弧线，为初始化时候 (0~1.0)
+     * 根据百分比重置弧线,的位置与高度(0~1.0)
      *
      * @param percent
      */
-    public void secureResetQuad(float percent) {
+    public void secureResetQuadPosition(float percent) {
         if (percent < 0) {
             percent = 0;
         } else if (percent > 1) {
             percent = 1;
         }
-        updateQuad(getWidth() / 2, -defQuadHeight * percent / FACTOR, 1 - percent, 0);
+        updateQuad(getWidth() / 2, -defQuadHeight * percent / FACTOR, percent, 0);
     }
 
 
     private void updateQuad(float x, float deltaY, float percent, float positionDetalY) {
-        float quadY = mTopVisibleHeight * percent + defQuadHeight + deltaY * FACTOR + positionDetalY;
-        float bottomPosition = mTopVisibleHeight * percent + deltaY * FACTOR * 0.5F + positionDetalY;
+        float quadY = (mTopVisibleHeight + offsetHeight) * percent + defQuadHeight + deltaY * FACTOR + positionDetalY;
+        float bottomPosition = (mTopVisibleHeight + offsetHeight) * percent + deltaY * FACTOR * 0.5F + positionDetalY;
 
         mPath.reset();
         mPath.moveTo(0, 0);
@@ -161,6 +172,47 @@ public class IBUTouchBgView extends FrameLayout {
         mPath.close();
         invalidate();
     }
+
+    /**
+     * 更新弧度的高度
+     * @param percent (0~1)
+     */
+    public void updateQuadHeight(float percent) {
+        if (percent < 0) {
+            percent = 0;
+        }
+        if (percent > 1) {
+            percent = 1;
+        }
+
+        float quadY = (mTopVisibleHeight + offsetHeight)  + defQuadHeight * percent;
+        float bottomPosition = (mTopVisibleHeight + offsetHeight);
+
+        mPath.reset();
+        mPath.moveTo(0, 0);
+        mPath.lineTo(getWidth(), 0);
+        mPath.lineTo(getWidth(), bottomPosition);
+        mPath.quadTo(getWidth()/2, quadY, 0, bottomPosition);
+        mPath.close();
+        invalidate();
+    }
+
+
+    /**
+     * 恢复弧度的高度
+      * @param percent  (0 ~1)
+     */
+    public void reBackQuadHeight(float percent ,boolean isInvalidte){
+        int temp = (int) (percent * Math.abs(tempQuadHeight));
+        updateQuad(getWidth() / 2, temp, 1, 0);
+
+        if(isInvalidte){
+            postInvalidate();
+        }
+
+    }
+
+
 
     /**
      * 弧线回弹至初始位置
@@ -212,8 +264,11 @@ public class IBUTouchBgView extends FrameLayout {
         canvas.restoreToCount(sc);
     }
 
-
-    public void setCustomAlpha(float alphaPercent) {
+    /**
+     *
+     * @param alphaPercent
+     */
+    public void setCustomAlpha(float alphaPercent , boolean isInvalidate) {
         if (alphaPercent < 0) {
             alphaPercent = 0;
         }
@@ -222,8 +277,25 @@ public class IBUTouchBgView extends FrameLayout {
         }
 
         alpha = Math.round(alphaPercent * 255);
-        postInvalidate();
+        if(isInvalidate){
+            postInvalidate();
+        }
     }
+
+
+    /**
+     * 恢复透明度
+     * @param percent (0~1)
+     * @param toAlpha  (0或者255)
+     */
+    public void reBackCustomAlpha(float percent, int toAlpha , boolean isInvalidate){
+        int dAlpha = toAlpha - alpha;
+        alpha += dAlpha * percent;
+        if(isInvalidate){
+            postInvalidate();
+        }
+    }
+
 
     /**
      * 向下拉动背景图变大
@@ -233,30 +305,34 @@ public class IBUTouchBgView extends FrameLayout {
      */
     public void downScalePercent(float percent) {
         if (preView != null) {
-            scale = percent * 0.2f;
+            float scale = percent * maxScale;
             preView.setScaleX(1 + scale);
             preView.setScaleY(1 + scale);
         }
-        totalDetalY = percent * 100;
+        float totalDetalY = percent * maxPullHeight;
         updateQuad(getWidth() / 2, 0, 1, totalDetalY);
     }
 
-    /**
-     * 恢复到原始状态
-     *
-     * @param percent
-     */
-    public void autoBackScale(float percent) {
-        if (preView != null) {
-            preView.setScaleX(1 + scale * percent);
-            preView.setScaleY(1 + scale * percent);
-        }
-        updateQuad(getWidth() / 2, 0, 1, percent * totalDetalY);
-        if (percent == 0) {
-            scale = 0;
-            totalDetalY = 0;
-        }
-    }
+
+//    /**
+//     * 恢复到原始状态
+//     *
+//     * @param percent
+//     */
+//    public void autoBackState(float percent) {
+//        if (percent < 0) {
+//            percent = 0;
+//        }
+//        if (percent > 1) {
+//            percent = 1;
+//        }
+//
+//        if (preView != null) {
+//            preView.setScaleX(1 + maxScale * percent);
+//            preView.setScaleY(1 + maxScale * percent);
+//        }
+//        updateQuad(getWidth() / 2, 0, 1, percent * maxPullHeight);
+//    }
 
 
     /**
@@ -271,7 +347,4 @@ public class IBUTouchBgView extends FrameLayout {
         return bgBitmap;
     }
 
-    public int getmTopVisibleHeight() {
-        return mTopVisibleHeight;
-    }
 }

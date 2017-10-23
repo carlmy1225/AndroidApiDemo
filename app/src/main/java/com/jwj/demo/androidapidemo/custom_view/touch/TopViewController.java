@@ -31,7 +31,7 @@ public class TopViewController {
      */
     public int topHeight;
 
-    final int TAP = 2;
+    final int TAP = 0;
 
 
     ViewGroup topView;
@@ -82,15 +82,7 @@ public class TopViewController {
     }
 
     public float getTopViewY() {
-
-        Log.d("topView_y", topView.getY() + "");
-        Log.d("topView_percent", topView.getY() / topHeight + "");
-
         return -topView.getY();
-    }
-
-    public ViewGroup getTopView() {
-        return topView;
     }
 
 
@@ -135,7 +127,7 @@ public class TopViewController {
      * @param deltaY 滑动的y方向的距离，有方向之分
      * @return
      */
-    public void scrollUp(int deltaY) {
+    public void scrollUp(float deltaY) {
         final float topScrollY = getTopViewY();
         if (topScrollY < 0) {
             if (topScrollY + deltaY > 0) {
@@ -161,7 +153,7 @@ public class TopViewController {
     public void scrollDown(int deltaY) {
         final float topScrollY = getTopViewY();
         if (topScrollY > 0 && deltaY != 0) {
-            int topDetalY = (int) (deltaY * 0.7f);
+            int topDetalY = deltaY;
             computeViewPositionRange(topView, topView.getY(), topDetalY, topHeight, 0);
         }
     }
@@ -169,60 +161,16 @@ public class TopViewController {
 
     public void refreshScroll(float deltaY, int refreshHeight) {
         ViewCompat.setY(topView, deltaY);
-//        final float topScrollY = getTopViewY();
-//        if (deltaY < 0) {
-//            if (topScrollY < 0) {
-//                if (topScrollY + deltaY > 0) {
-//                    ViewCompat.setY(topView, 0);
-//                } else {
-//                    ViewCompat.setY(topView, -(topScrollY + deltaY));
-//                }
-//
-//            } else if (topScrollY == 0) {
-//                ViewCompat.setY(topView, -deltaY);
-//            }
-//        } else if (deltaY > 0) {
-//            if (topScrollY <= 0) {
-//                //下拉刷新
-//                deltaY = deltaY / 2;
-//                if (Math.abs(topScrollY + deltaY) > refreshHeight) {
-//                    ViewCompat.setY(topView, refreshHeight);
-//                } else if (Math.abs(topScrollY + deltaY) <= refreshHeight) {
-//                    computeViewPositionRange(topView, topView.getY(), deltaY, refreshHeight, 0);
-//                }
-//            }
-//        }
-//
-//        Log.d("topview_y", topView.getY() + "");
     }
 
-    public void refreshUp(float deltaY) {
-        float topScrollY = getTopViewY();
-
-        if (topScrollY < 0) {
-            if (topScrollY + deltaY > 0) {
-                ViewCompat.setY(topView, 0);
-            } else {
-                ViewCompat.setY(topView, -(topScrollY + deltaY));
-            }
-        }
-    }
-
-    public void refreshDown(float deltaY, int refreshHeight) {
-        float topScrollY = getTopViewY();
-        if (topScrollY <= 0) {
-            //下拉刷新
-            deltaY = deltaY / 3;
-            if (Math.abs(topScrollY + deltaY) > refreshHeight) {
-                android.support.v4.view.ViewCompat.setY(topView, refreshHeight);
-            } else if (Math.abs(topScrollY + deltaY) <= refreshHeight) {
-                computeViewPositionRange(topView, topView.getY(), deltaY, refreshHeight, 0);
-            }
-        }
+    public void scrollTo(float percent){
+        ViewCompat.setY(topView , -percent * topHeight);
     }
 
 
     public void alphaIcons(float percent) {
+        percent *= 1.2f;
+
         for (View view : icons) {
             int alpha = (int) touchUtilNew.computeRangeAlpha((1 - percent) * 255, 0, 255);
             if (view.getBackground() != null) {
@@ -232,11 +180,6 @@ public class TopViewController {
             }
         }
     }
-
-    public void scrollToPosition(int y) {
-        ViewCompat.setY(topView, y);
-    }
-
 
     public float getTopHeight() {
         return topHeight;

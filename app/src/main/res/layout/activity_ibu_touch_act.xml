@@ -57,19 +57,11 @@
             android:id="@+id/top_bg_view"
             android:tag="@string/ibu_touch_barbgview_tag"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:alpha="0"
             android:background="#ffffffff"
             android:paddingBottom="15dp"
             android:paddingTop="15dp" />
-
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:tag="@string/ibu_touch_refresh_tag"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
 
         <LinearLayout
             android:id="@+id/top_content_view"

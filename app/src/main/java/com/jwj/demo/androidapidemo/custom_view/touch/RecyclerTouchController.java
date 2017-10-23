@@ -31,7 +31,7 @@ public class RecyclerTouchController {
     /**
      * 滚动超过的部分
      */
-    int recyclerScrollTo = 200;
+    int recyclerScrollTo =0;
     int oldPaddingTop;
     IBUTouchRecyclerView recyclerView;
     IBUTouchController touchUtilNew;
@@ -49,6 +49,8 @@ public class RecyclerTouchController {
         recyclerBottomLimitY = recyclerOldY + refreshHeight;
         recyclerTopLimitY = recyclerView.getPaddingTop() - barBottom + recyclerScrollTo;  //滑动到顶部的距离
         oldPaddingTop = recyclerView.getPaddingTop();
+
+        touchUtilNew.setBgScrollHeight(recyclerTopLimitY);
 
         Log.d(TAG, "scrollY =" + recyclerView.getmTotalScrolled());
         Log.d(TAG, "recyclerOldY =" + recyclerOldY);

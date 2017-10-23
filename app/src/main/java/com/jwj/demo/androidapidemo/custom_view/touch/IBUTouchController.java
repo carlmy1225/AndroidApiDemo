@@ -18,6 +18,7 @@ import android.view.animation.LinearInterpolator;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.jwj.demo.androidapidemo.R;
+import com.jwj.demo.androidapidemo.util.ViewUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
@@ -52,7 +53,17 @@ public class IBUTouchController {
      */
     public static final int AUTO_REFRESH_UP = 2;
 
-    int isAutoScrollDirection;
+    /**
+     * 滑动的标志 (1 = 触摸滑动,  3 = 是自动滑动)
+     */
+    int scrollFlag;
+
+    /**
+     * 手势弹起后自动滑动的方向
+     */
+    int autoScrollDirection;
+
+
     boolean isInit;
 
     RecyclerTouchController recyclerTouchController;
@@ -66,6 +77,8 @@ public class IBUTouchController {
     AutoScrollUtil autoScrollUtil;
     IBUTouchRecyclerView recyclerView;
 
+    AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
+
 
     public IBUTouchController(Context context) {
         this.mContext = context;
@@ -76,14 +89,13 @@ public class IBUTouchController {
     public void init(ViewGroup parent) {
         recyclerView = (IBUTouchRecyclerView) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_recyclerview_tag));
         ViewGroup topView = (ViewGroup) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_topview_tag));
-        LottieAnimationView refreshView = (LottieAnimationView) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_refresh_tag));
         IBUTouchBgView mainBgView = (IBUTouchBgView) parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_mainbg_tag));
         barBgView = parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_barbgview_tag));
         SmartRefreshLayout refreshLayout = (SmartRefreshLayout) recyclerView.getParent();
 
         recyclerTouchController = new RecyclerTouchController(recyclerView, this);
         topViewController = new TopViewController(topView, this);
-        bgTouchController = new BgTouchController(mainBgView, this);
+        bgTouchController = new BgTouchController(mainBgView);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -118,48 +130,6 @@ public class IBUTouchController {
         refreshLayout.setReboundDuration(350);
     }
 
-
-    int scrollFlag;
-
-    public boolean onTouchEvent(MotionEvent event) {
-        autoScrollUtil.onTouchEvent(event);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                scrollFlag = 0;
-                break;
-            case MotionEvent.ACTION_POINTER_DOWN:
-                if (isRunning()) {
-                    cancelAnimator();
-                }
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                scrollFlag = 1;
-                break;
-            case MotionEvent.ACTION_CANCEL:
-            case MotionEvent.ACTION_UP:
-                scrollFlag |= 2;
-                break;
-        }
-        return false;
-    }
-
-
-    public void onScroll(int dy) {
-        if (shouldStopScroll() && dy < 0 && scrollFlag == 3) {
-            recyclerView.stopScroll();
-            startAnimator(1);
-            return;
-        }
-
-        if (dy > 0) {
-            scrollUp(dy);
-        } else if (dy < 0) {
-            scrollDown(dy);
-        }
-    }
-
-
     /**
      * 计算一些需要初始化的值
      */
@@ -187,86 +157,68 @@ public class IBUTouchController {
     }
 
 
-    private float getTopViewPositionY() {
-        if (topViewController != null) {
-            return topViewController.getTopViewY();
+
+
+    public boolean onTouchEvent(MotionEvent event) {
+        autoScrollUtil.onTouchEvent(event);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                scrollFlag = 0;
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                if (isRunning()) {
+                    cancelAnimator();
+                }
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                scrollFlag = 1;
+                break;
+            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_UP:
+                scrollFlag |= 2;
+                break;
         }
-        return 0;
-    }
-
-
-    public void animatorStart() {
-        topViewController.animatorStart();
-        recyclerTouchController.animatorStart();
-        bgTouchController.animatorStart();
-    }
-
-    public void onAnimator(float percent, Object... args) {
-        topViewController.animator(percent, args);
-        recyclerTouchController.animator(percent, args);
-        bgTouchController.animator(percent, args);
-        handleEffectAnimtor(getTopViewPositionY());
-    }
-
-    public void scrollUp(int deltaY) {
-        topViewController.scrollUp(deltaY);
-        handleEffectAnimtor(getTopViewPositionY());
-
-    }
-
-    public void scrollDown(int deltaY) {
-        if (isCallPullTopToDown()) {
-            topViewController.scrollDown(deltaY);
-        }
-        handleEffectAnimtor(getTopViewPositionY());
+        return false;
     }
 
 
     /**
-     * 处理背景渐变效果
+     * 滚动view
+     * @param dy
      */
+    public void onScroll(int dy) {
+        if (shouldStopScroll(dy)) {
+            recyclerView.stopScroll();
+            startAnimator(1);
+            return;
+        }
 
-    void handleEffectAnimtor(float translateY) {
-        float percent = computeRangeAlpha(translateY * 1f / topViewController.getTopHeight(), 0, 1);
-        barBgView.setAlpha(percent);
-        topViewController.alphaIcons(percent);
-        bgTouchController.handleEffectAnimtor(translateY);
+        float percent = getRecyclerScrollY()* 1f / bgTouchController.scrollHeight;
+        if (dy > 0) {
+            if(percent > 1){
+                percent = 1;
+            }
+            bgTouchController.scrollTo(percent);
+            topViewController.scrollTo(percent);
+        } else if (dy < 0) {
+            if(percent <= 1){
+                bgTouchController.scrollTo(percent);
+                topViewController.scrollTo(percent);
+            }
+        }
+        handleEffectAnimtor();
     }
 
-
+    /**
+     * 下拉刷新滚动
+     * @param percent
+     * @param deltaY
+     * @param refreshHeight
+     */
     public void onRefreshScroll(float percent, float deltaY, int refreshHeight) {
         topViewController.refreshScroll(deltaY, refreshHeight);
         bgTouchController.refreshPull(percent);
-    }
-
-
-    public void refreshAnimator(float percent) {
-        int topY = (int) (percent * topDistance);
-        topViewController.scrollToPosition(-topY);
-        if (bgTouchController != null) {
-            bgTouchController.autoBackScale(percent);
-        }
-    }
-
-    float topDistance;
-
-    public void refreshAnimatorStart() {
-        topDistance = getTopViewPositionY();
-    }
-
-    /**
-     * 判断是否自动滚动
-     *
-     * @return
-     */
-    public void isAutoScroll(boolean isVelocityEnable) {
-        if (!topViewController.isAutoAnimator(isAutoScrollDirection, isVelocityEnable)) {
-            if (getTopViewPositionY() == topViewController.getTopHeight()) {        //图标滑动顶部时候
-                recyclerTouchController.isAnimator(isAutoScrollDirection, isVelocityEnable, 0);  //barheigth
-            } else if (getTopViewPositionY() <= 0) {
-//                refreshController.isAutoAnimator(topViewController.getTopViewY());
-            }
-        }
     }
 
 
@@ -283,26 +235,57 @@ public class IBUTouchController {
             animator = new ScrollAnimator(300, new AccelerateDecelerateInterpolator(), 0, 1f) {
                 @Override
                 public void onAnimationStart(Animator animation, Object... args) {
-                    animatorStart();
+                    topViewController.animatorStart();
+                    recyclerTouchController.animatorStart();
+                    bgTouchController.animatorStart();
                 }
 
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
                     float percent = (float) animation.getAnimatedValue();
-                    onAnimator(percent, args);
+                    topViewController.animator(percent, args);
+                    recyclerTouchController.animator(percent, args);
+                    bgTouchController.animator(percent, args);
+                    handleEffectAnimtor();
                 }
             };
         }
         animator.start(up);
     }
 
+
+    /**
+     * 处理背景渐变效果
+     */
+
+    void handleEffectAnimtor() {
+        float percent = computeRangeAlpha(getTopViewPositionY() * 1f / topViewController.getTopHeight(), 0, 1);
+        barBgView.setAlpha(percent);
+        topViewController.alphaIcons(percent);
+    }
+
+
+    /**
+     * 判断是否自动滚动,然后调起回滚动画
+     *
+     * @return
+     */
+    public void isAutoScroll(boolean isVelocityEnable) {
+        if (!topViewController.isAutoAnimator(autoScrollDirection, isVelocityEnable)) {
+            if (getTopViewPositionY() == topViewController.getTopHeight()) {        //图标滑动顶部时候
+                recyclerTouchController.isAnimator(autoScrollDirection, isVelocityEnable, 0);  //barheigth
+            }
+        }
+    }
+
+
     public void handleAutoScrollDirection() {
         if (getTopViewPositionY() < 0) {
-            isAutoScrollDirection = AUTO_REFRESH_UP;
+            autoScrollDirection = AUTO_REFRESH_UP;
         } else if (getTopViewPositionY() < topViewController.getTopHeight()) {
-            isAutoScrollDirection = AUTO_SCROLL_UP;
+            autoScrollDirection = AUTO_SCROLL_UP;
         } else {
-            isAutoScrollDirection = AUTO_SCROLL_DOWN;
+            autoScrollDirection = AUTO_SCROLL_DOWN;
         }
     }
 
@@ -328,50 +311,34 @@ public class IBUTouchController {
     }
 
     /**
-     * 是否可以开始往下滚动动画
-     * 855 + 170 = 1025
-     *
-     * @return
-     */
-    public boolean isCallPullTopToDown() {
-        return recyclerTouchController.getScrollY() <=
-                recyclerTouchController.getRecyclerTopLimitY() -
-                        barBgView.getHeight() - 100;
-    }
-
-    /**
      * recyclerview 向下滚动停止的位置
      */
-    public boolean shouldStopScroll() {
-
-        Log.d("stop_scrolly =", recyclerTouchController.getScrollY() + "");
-        Log.d("stop_scrolly_limity=", recyclerTouchController.getRecyclerTopLimitY() + "");
-        Log.d("stop_scrolly_y =", recyclerTouchController.getY() + "");
-        return recyclerTouchController.getScrollY() <= recyclerTouchController.getRecyclerTopLimitY();
+    public boolean shouldStopScroll(int dy) {
+        return recyclerTouchController.getScrollY() + dy <= recyclerTouchController.getRecyclerTopLimitY()
+                && dy < 0 && scrollFlag == 3;
     }
 
 
     public void setTopHeight(int topHeight) {
         this.topHeight = topHeight;
-        bgTouchController.init(topHeight);
+    }
+
+
+    public void setBgScrollHeight(int scrollHeight){
+        bgTouchController.init(scrollHeight);
+    }
+
+
+    private float getTopViewPositionY() {
+        if (topViewController != null) {
+            return topViewController.getTopViewY();
+        }
+        return 0;
     }
 
 
     public int getRecyclerScrollY() {
         return recyclerTouchController.getScrollY();
-    }
-
-    public boolean isRefresh() {
-        return topViewController.getTopViewY() < 0;
-    }
-
-    public boolean isCanrefreshDown(int dy) {
-        return getRecyclerScrollY() == 0 && topViewController.getTopViewY() == 0 && dy < 0
-                || isRefresh();
-    }
-
-    public float getTopViewY() {
-        return topViewController.getTopViewY();
     }
 
     public boolean isRunning() {

@@ -1,29 +1,32 @@
 package com.jwj.demo.androidapidemo.custom_view.touch;
 
+import android.support.v4.view.ViewCompat;
+
 /**
  * Created by jwj on 17/10/20.
  */
 public class BgTouchController {
 
     IBUTouchBgView mainBgView;
-    IBUTouchController utilNew;
-
+    /**
+     * 滑动的高度
+     */
     int scrollHeight;
+    int defQuadHeight = 170; //弧线的高度
+    float topDistance;  //临时数据存储
 
-    final int TAP = 2;
 
-
-    public BgTouchController(IBUTouchBgView bgView, IBUTouchController utilNew) {
+    public BgTouchController(IBUTouchBgView bgView) {
         this.mainBgView = bgView;
-        this.utilNew = utilNew;
+        mainBgView.setDefQuadHeight(defQuadHeight);
     }
+
+
 
     public void init(int scrollHeight) {
         this.scrollHeight = scrollHeight;
     }
 
-
-    int topDistance;
 
     public void animatorStart() {
         topDistance = getScrollY();
@@ -34,85 +37,71 @@ public class BgTouchController {
         int up = (int) args[0];
 
         if (up > 0) {
-            topY = (int) (percent * 1.2f * (scrollHeight - Math.abs(topDistance)));
+            topY = (int) (percent * (scrollHeight - Math.abs(topDistance)));
+            mainBgView.setCustomAlpha(1-percent ,false);
+
         } else {
-            topY = -(int) (percent * topDistance);
+            topY = -(int) (percent * Math.abs(topDistance));
+            mainBgView.reBackCustomAlpha(percent ,255,false);
         }
-
-        int desY = (int) utilNew.computeRangeAlpha(topDistance + topY, 0, scrollHeight);
-        handleEffectAnimtor(desY);
+        mainBgView.reBackQuadHeight(1 - percent, false);
+        int desY = (int) computeRange(Math.abs(topDistance) + topY, 0, scrollHeight);
+        ViewCompat.setY(mainBgView , -desY);
     }
 
-    public void scrollUp(int deltaY) {
-        if (mainBgView.getScrollY() + deltaY > getScrollHeight()) {
-            mainBgView.scrollTo(0, getScrollHeight());
-        } else {
-            mainBgView.scrollTo(0, mainBgView.getScrollY() + deltaY);
-        }
-
-        float percent = mainBgView.getScrollY() * 1f / getScrollHeight();
-        mainBgView.setCustomAlpha(1 - percent);
-        if (alphaCallBack != null) {
-            alphaCallBack.alphaChange(percent, 1);
-        }
+    /**
+     * 滚动view
+     * @param percent
+     */
+    public void scrollTo(float percent){
+        ViewCompat.setY(mainBgView, -percent * (defQuadHeight + scrollHeight));
+        mainBgView.setCustomAlpha(1 - percent, false);
+        mainBgView.updateQuadHeight(1 - percent);
     }
 
-    public void scrollDown(int deltaY) {
-        float percent = mainBgView.getScrollY() * 1f / getScrollHeight();
-        if (mainBgView.getScrollY() + deltaY < 0) {
-            mainBgView.scrollTo(0, 0);
-        } else {
-            mainBgView.scrollTo(0, mainBgView.getScrollY() + deltaY);
-        }
-        mainBgView.setCustomAlpha(1 - percent);
-        if (alphaCallBack != null) {
-            alphaCallBack.alphaChange(percent, -1);
-        }
-    }
-
-    void handleEffectAnimtor(float translateY) {
-        float percent = utilNew.computeRangeAlpha(translateY * 1f / scrollHeight, 0, 1);
-
-        if (translateY < 0) {
-            translateY = 0;
-        }
-        mainBgView.scrollTo(0, (int) translateY);
-        mainBgView.setCustomAlpha(1 - percent);
-    }
-
-
-    public void autoBackScale(float percent) {
-        mainBgView.autoBackScale(percent);
-    }
-
-
+    /**
+     * 下拉刷新滑动
+     * @param percent
+     */
     public void refreshPull(float percent) {
         mainBgView.downScalePercent(percent);
     }
 
+    /**
+     * 下拉刷新,回弹
+     * @param percent
+     */
     public void refreshRelease(float percent) {
-        mainBgView.autoBackScale(percent);
+        mainBgView.downScalePercent(percent);
     }
 
-    public int getScrollHeight() {
-        return scrollHeight;
-    }
 
-    public int getScrollY() {
-        return mainBgView.getScrollY();
+    public float getScrollY() {
+        return mainBgView.getY();
     }
 
 
     /**
-     * 透明度变化回调
+     * 设置额外的高度
      */
-    public interface AlphaCallBack {
-        void alphaChange(float percent, int direction);
+    public void setOffset(int offsetHeight){
+        mainBgView.setOffsetHeight(offsetHeight);
     }
 
-    private AlphaCallBack alphaCallBack;
-
-    public void setAlphaCallBack(AlphaCallBack alphaCallBack) {
-        this.alphaCallBack = alphaCallBack;
+    /**
+     * 控制范围
+     * @param distance
+     * @param min
+     * @param max
+     * @return
+     */
+    private float computeRange(float distance, int min, int max) {
+        if (distance > max) {
+            distance = max;
+        } else if (distance < min) {
+            distance = min;
+        }
+        return distance;
     }
+
 }

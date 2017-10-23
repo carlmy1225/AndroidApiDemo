@@ -88,7 +88,7 @@ public class IBUMainTouchAct extends BaseAct {
                 }
 
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -102,6 +102,22 @@ public class IBUMainTouchAct extends BaseAct {
                 mAdapter.notifyDataSetChanged();
             }
         }.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+
+        loadDelay();
+    }
+
+
+    public void loadDelay(){
+
+        refreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                IBUMainModel ibuMainModel = new IBUMainModel();
+                ibuMainModel.itemType = IBUMainAdapter.TYPE_INFO_ITEM;
+                mAdapter.getModels().add(ibuMainModel);
+                mAdapter.notifyDataSetChanged();
+            }
+        },4000);
     }
 
 

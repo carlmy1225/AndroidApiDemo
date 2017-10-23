@@ -29,7 +29,6 @@ public class IBUTouchRecyclerView extends RecyclerView {
     IBUTouchController controller;
     private boolean isInit;
 
-
     Map<Integer, Integer> childTypeHeight = new HashMap<>();
 
     public IBUTouchRecyclerView(Context context) {
