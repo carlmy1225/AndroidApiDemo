@@ -4,23 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.ViewDragHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.MotionEvent;
-import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.jwj.demo.androidapidemo.R;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +30,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
     private boolean isInit;
 
 
-    Map<Integer,Integer> childTypeHeight = new HashMap<>();
+    Map<Integer, Integer> childTypeHeight = new HashMap<>();
 
     public IBUTouchRecyclerView(Context context) {
         this(context, null);
@@ -57,7 +50,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
         init();
     }
 
-    private void init(){
+    private void init() {
     }
 
 
@@ -102,7 +95,6 @@ public class IBUTouchRecyclerView extends RecyclerView {
     }
 
 
-
     @Override
     public void onScrolled(int dx, int dy) {
         super.onScrolled(dx, dy);
@@ -116,13 +108,15 @@ public class IBUTouchRecyclerView extends RecyclerView {
 
         if (firstVisiableChildView != null) {
             int itemHeight = firstVisiableChildView.getHeight();
-            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams)firstVisiableChildView.getLayoutParams();
-            if(getAdapter() !=null){
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) firstVisiableChildView.getLayoutParams();
+            if (getAdapter() != null) {
                 int type = getAdapter().getItemViewType(position);
                 itemHeight += params.topMargin + params.bottomMargin;
-                childTypeHeight.put(type , itemHeight);
+                childTypeHeight.put(type, itemHeight);
             }
-            int scrollY = getTotalHeight(position) - (int)firstVisiableChildView.getTop() + getPaddingTop();
+            int scrollY = getTotalHeight(position) - (int) firstVisiableChildView.getTop() + getPaddingTop();
+
+            Log.d("recycler_scrolly", scrollY + "");
             return scrollY;
         } else {
             return 0;
@@ -130,11 +124,10 @@ public class IBUTouchRecyclerView extends RecyclerView {
     }
 
 
-
-    public int getTotalHeight(int position){
+    public int getTotalHeight(int position) {
         int total = 0;
-        if(getAdapter() !=null){
-            for(int i=0; i<position; i++){
+        if (getAdapter() != null) {
+            for (int i = 0; i < position; i++) {
                 int type = getAdapter().getItemViewType(position);
                 total += childTypeHeight.get(type);
             }
@@ -143,21 +136,13 @@ public class IBUTouchRecyclerView extends RecyclerView {
     }
 
 
-    public boolean isScrollEnable() {
-        return isInterceptd;
-    }
-
-
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        if(!isInit){
-            controller.init((ViewGroup)getParent());
+        if (!isInit) {
+            controller.init((ViewGroup) getParent().getParent());
             isInit = true;
         }
-
-        if(controller.onTouchEvent(e)){
-            return true;
-        }
+        controller.onTouchEvent(e);
         return super.onTouchEvent(e);
     }
 

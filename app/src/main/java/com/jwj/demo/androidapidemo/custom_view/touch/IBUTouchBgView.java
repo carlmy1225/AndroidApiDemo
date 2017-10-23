@@ -233,7 +233,7 @@ public class IBUTouchBgView extends FrameLayout {
      */
     public void downScalePercent(float percent) {
         if (preView != null) {
-            scale = percent * 0.5f;
+            scale = percent * 0.2f;
             preView.setScaleX(1 + scale);
             preView.setScaleY(1 + scale);
         }
@@ -252,7 +252,6 @@ public class IBUTouchBgView extends FrameLayout {
             preView.setScaleY(1 + scale * percent);
         }
         updateQuad(getWidth() / 2, 0, 1, percent * totalDetalY);
-
         if (percent == 0) {
             scale = 0;
             totalDetalY = 0;

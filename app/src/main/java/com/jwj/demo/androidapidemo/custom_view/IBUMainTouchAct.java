@@ -11,6 +11,9 @@ import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainAdapter;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainModel;
 import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView;
 import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,7 @@ public class IBUMainTouchAct extends BaseAct {
     View topContentView;
     View wechatIconView;
     IBUTouchBgView bgView;
+    SmartRefreshLayout refreshLayout;
 
 
     @Override
@@ -41,8 +45,17 @@ public class IBUMainTouchAct extends BaseAct {
         mAdapter = new IBUMainAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLinearLayoutManager();
+        refreshLayout = (SmartRefreshLayout) findViewById(R.id.refresh_layout);
 
         bgView.showImage(getResources().getDrawable(R.mipmap.myctrip_bg_home), false);
+
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+
+            }
+        });
+
 
         loadData();
 //        bgView.postDelayed(new Runnable() {

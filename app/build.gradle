@@ -42,4 +42,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:25.0.0'
     compile 'com.airbnb.android:lottie:2.2.0'
+    compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.4-alpha-6'
 }

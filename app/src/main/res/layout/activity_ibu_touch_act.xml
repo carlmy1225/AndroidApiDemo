@@ -28,16 +28,30 @@
 
         </com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView>
 
-        <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView
-            android:id="@+id/ibu_recycler_view"
-            android:tag="@string/ibu_touch_recyclerview_tag"
-            android:nestedScrollingEnabled="true"
-            android:overScrollMode="always"
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fadingEdgeLength="0dp"
-            android:clipToPadding="false"
-            app:top_visible_view_id="@+id/top_content_view" />
+            app:srlEnableOverScrollDrag="false"
+            app:srlHeaderTriggerRate="0.7">
+
+            <com.jwj.demo.androidapidemo.custom_view.touch.RefreshLottieHeader
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+
+            <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView
+                android:id="@+id/ibu_recycler_view"
+                android:tag="@string/ibu_touch_recyclerview_tag"
+                android:nestedScrollingEnabled="true"
+                android:overScrollMode="always"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadingEdgeLength="0dp"
+                android:clipToPadding="false"
+                app:top_visible_view_id="@+id/top_content_view" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
 
         <View
             android:id="@+id/top_bg_view"

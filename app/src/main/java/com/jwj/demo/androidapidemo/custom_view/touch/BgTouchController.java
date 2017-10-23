@@ -3,7 +3,7 @@ package com.jwj.demo.androidapidemo.custom_view.touch;
 /**
  * Created by jwj on 17/10/20.
  */
-public class BgTouchController{
+public class BgTouchController {
 
     IBUTouchBgView mainBgView;
     IBUTouchController utilNew;
@@ -13,25 +13,25 @@ public class BgTouchController{
     final int TAP = 2;
 
 
-    public BgTouchController(IBUTouchBgView bgView , IBUTouchController utilNew){
+    public BgTouchController(IBUTouchBgView bgView, IBUTouchController utilNew) {
         this.mainBgView = bgView;
         this.utilNew = utilNew;
     }
 
-    public void init(int scrollHeight){
+    public void init(int scrollHeight) {
         this.scrollHeight = scrollHeight;
     }
 
 
-
     int topDistance;
+
     public void animatorStart() {
-        topDistance =  getScrollY();
+        topDistance = getScrollY();
     }
 
     public void animator(float percent, Object... args) {
         int topY;
-        int up = (int)args[0];
+        int up = (int) args[0];
 
         if (up > 0) {
             topY = (int) (percent * 1.2f * (scrollHeight - Math.abs(topDistance)));
@@ -44,29 +44,29 @@ public class BgTouchController{
     }
 
     public void scrollUp(int deltaY) {
-        if(mainBgView.getScrollY() + deltaY > getScrollHeight()){
-            mainBgView.scrollTo(0 , getScrollHeight());
-        }else{
+        if (mainBgView.getScrollY() + deltaY > getScrollHeight()) {
+            mainBgView.scrollTo(0, getScrollHeight());
+        } else {
             mainBgView.scrollTo(0, mainBgView.getScrollY() + deltaY);
         }
 
-        float percent = mainBgView.getScrollY()*1f / getScrollHeight();
+        float percent = mainBgView.getScrollY() * 1f / getScrollHeight();
         mainBgView.setCustomAlpha(1 - percent);
-        if(alphaCallBack !=null){
-            alphaCallBack.alphaChange(percent , 1);
+        if (alphaCallBack != null) {
+            alphaCallBack.alphaChange(percent, 1);
         }
     }
 
     public void scrollDown(int deltaY) {
-        float percent = mainBgView.getScrollY()*1f / getScrollHeight();
-        if(mainBgView.getScrollY() + deltaY < 0){
-            mainBgView.scrollTo(0 , 0);
-        }else{
+        float percent = mainBgView.getScrollY() * 1f / getScrollHeight();
+        if (mainBgView.getScrollY() + deltaY < 0) {
+            mainBgView.scrollTo(0, 0);
+        } else {
             mainBgView.scrollTo(0, mainBgView.getScrollY() + deltaY);
         }
         mainBgView.setCustomAlpha(1 - percent);
-        if(alphaCallBack !=null){
-            alphaCallBack.alphaChange(percent , -1);
+        if (alphaCallBack != null) {
+            alphaCallBack.alphaChange(percent, -1);
         }
     }
 
@@ -77,36 +77,28 @@ public class BgTouchController{
             translateY = 0;
         }
         mainBgView.scrollTo(0, (int) translateY);
-        mainBgView.setCustomAlpha(1- percent);
+        mainBgView.setCustomAlpha(1 - percent);
     }
 
 
-    public void autoBackScale(float percent){
+    public void autoBackScale(float percent) {
         mainBgView.autoBackScale(percent);
     }
 
 
-    public void refreshUp(float deltaY) {
-        mainBgView.downScalePercent(mainBgView.getScrollY() / getScrollHeight());
+    public void refreshPull(float percent) {
+        mainBgView.downScalePercent(percent);
     }
 
-    public void refreshDown(float deltaY, int refreshHeight) {
-        mainBgView.downScalePercent(mainBgView.getScrollY() / getScrollHeight());
-    }
-
-    public void refreshAnimator(float percent) {
+    public void refreshRelease(float percent) {
         mainBgView.autoBackScale(percent);
     }
 
-    public void refreshAnimatorStart() {
-
-    }
-
-    public int getScrollHeight(){
+    public int getScrollHeight() {
         return scrollHeight;
     }
 
-    public int getScrollY(){
+    public int getScrollY() {
         return mainBgView.getScrollY();
     }
 
@@ -114,8 +106,8 @@ public class BgTouchController{
     /**
      * 透明度变化回调
      */
-    public interface AlphaCallBack{
-        void alphaChange(float percent , int direction);
+    public interface AlphaCallBack {
+        void alphaChange(float percent, int direction);
     }
 
     private AlphaCallBack alphaCallBack;
