@@ -7,12 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.jwj.demo.androidapidemo.R;
+import com.jwj.demo.androidapidemo.custom_view.recycler.CustomSnapHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
     int resId;
     Activity activity;
     boolean isInterceptd = false;
-    IBUTouchController controller;
+    //    IBUTouchController controller;
     private boolean isInit;
 
     Map<Integer, Integer> childTypeHeight = new HashMap<>();
@@ -56,7 +55,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        controller = new IBUTouchController(getContext());
+//        controller = new IBUTouchController(getContext());
     }
 
     public LayoutManager setLinearLayoutManager() {
@@ -70,7 +69,6 @@ public class IBUTouchRecyclerView extends RecyclerView {
                     contentHeight += getChildAt(i).getHeight();
                 }
                 int contentLength = contentHeight + getPaddingTop() + getPaddingBottom();
-                int height = getHeight();
                 if (contentLength + mTopVisibleHeight > getHeight()) {
                     isInterceptd = true;
                 } else {
@@ -79,6 +77,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
             }
         };
         setLayoutManager(manager);
+        new CustomSnapHelper().attachToRecyclerView(this);
         return manager;
     }
 
@@ -114,8 +113,6 @@ public class IBUTouchRecyclerView extends RecyclerView {
                 childTypeHeight.put(type, itemHeight);
             }
             int scrollY = getTotalHeight(position) - (int) firstVisiableChildView.getTop() + getPaddingTop();
-
-            Log.d("recycler_scrolly", scrollY + "");
             return scrollY;
         } else {
             return 0;
@@ -137,11 +134,11 @@ public class IBUTouchRecyclerView extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        if (!isInit) {
-            controller.init((ViewGroup) getParent().getParent());
-            isInit = true;
-        }
-        controller.onTouchEvent(e);
+//        if (!isInit) {
+//            controller.init((ViewGroup) getParent().getParent());
+//            isInit = true;
+//        }
+//        controller.onTouchEvent(e);
         return super.onTouchEvent(e);
     }
 

@@ -1,7 +1,6 @@
 package com.jwj.demo.androidapidemo.custom_view.touch;
 
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -19,7 +18,7 @@ import static com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchController.A
  * Copyright: Ctrip
  */
 
-public class TopViewController {
+public class IBUTouchTopController {
 
     /**
      * 松开手时向下或向上动画的分割线
@@ -31,14 +30,11 @@ public class TopViewController {
      */
     public int topHeight;
 
-    final int TAP = 0;
-
-
     ViewGroup topView;
     IBUTouchController touchUtilNew;
     List<View> icons = new ArrayList<>();
 
-    public TopViewController(final ViewGroup topView, final IBUTouchController touchUtilNew) {
+    public IBUTouchTopController(final ViewGroup topView, final IBUTouchController touchUtilNew) {
         this.topView = topView;
         this.touchUtilNew = touchUtilNew;
 
@@ -62,23 +58,6 @@ public class TopViewController {
             }
         });
 
-    }
-
-    private void computeViewPositionRange(View view, float positionY, float deltaY, float maxScroll, float minScroll) {
-        Log.d("position_range", "posistionY =" + positionY + ",deltaY =" + deltaY);
-        if (deltaY > 0) {   //向上
-            if (positionY - deltaY < minScroll) {
-                ViewCompat.setY(view, minScroll);
-            } else {
-                ViewCompat.setY(view, positionY - deltaY);
-            }
-        } else {
-            if (positionY - deltaY > maxScroll) {
-                ViewCompat.setY(view, maxScroll);
-            } else {
-                ViewCompat.setY(view, positionY - deltaY);
-            }
-        }
     }
 
     public float getTopViewY() {
@@ -122,55 +101,17 @@ public class TopViewController {
         ViewCompat.setY(topView, -desY);
     }
 
-
-    /**
-     * @param deltaY 滑动的y方向的距离，有方向之分
-     * @return
-     */
-    public void scrollUp(float deltaY) {
-        final float topScrollY = getTopViewY();
-        if (topScrollY < 0) {
-            if (topScrollY + deltaY > 0) {
-                ViewCompat.setY(topView, 0);
-            } else {
-                ViewCompat.setY(topView, -(topScrollY + deltaY));
-            }
-        } else if (topScrollY == 0) {
-            ViewCompat.setY(topView, -deltaY);
-        } else if (topScrollY < topHeight) {
-            if (topScrollY + deltaY > topHeight) {
-                ViewCompat.setY(topView, -topHeight);
-            } else if (topScrollY + deltaY + TAP > topHeight) {
-                ViewCompat.setY(topView, -topHeight);
-            } else {
-                ViewCompat.setY(topView, -(topScrollY + deltaY + TAP));
-            }
-        } else {
-            ViewCompat.setY(topView, -topHeight);
-        }
-    }
-
-    public void scrollDown(int deltaY) {
-        final float topScrollY = getTopViewY();
-        if (topScrollY > 0 && deltaY != 0) {
-            int topDetalY = deltaY;
-            computeViewPositionRange(topView, topView.getY(), topDetalY, topHeight, 0);
-        }
-    }
-
-
-    public void refreshScroll(float deltaY, int refreshHeight) {
+    public void refreshScroll(float deltaY) {
         ViewCompat.setY(topView, deltaY);
     }
 
-    public void scrollTo(float percent){
-        ViewCompat.setY(topView , -percent * topHeight);
+    public void scrollTo(float percent) {
+        ViewCompat.setY(topView, -percent * topHeight);
     }
 
 
     public void alphaIcons(float percent) {
         percent *= 1.2f;
-
         for (View view : icons) {
             int alpha = (int) touchUtilNew.computeRangeAlpha((1 - percent) * 255, 0, 255);
             if (view.getBackground() != null) {

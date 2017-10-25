@@ -5,7 +5,7 @@ import android.support.v4.view.ViewCompat;
 /**
  * Created by jwj on 17/10/20.
  */
-public class BgTouchController {
+public class IBUTouchBgController {
 
     IBUTouchBgView mainBgView;
     /**
@@ -16,11 +16,10 @@ public class BgTouchController {
     float topDistance;  //临时数据存储
 
 
-    public BgTouchController(IBUTouchBgView bgView) {
+    public IBUTouchBgController(IBUTouchBgView bgView) {
         this.mainBgView = bgView;
         mainBgView.setDefQuadHeight(defQuadHeight);
     }
-
 
 
     public void init(int scrollHeight) {
@@ -38,22 +37,23 @@ public class BgTouchController {
 
         if (up > 0) {
             topY = (int) (percent * (scrollHeight - Math.abs(topDistance)));
-            mainBgView.setCustomAlpha(1-percent ,false);
+            mainBgView.setCustomAlpha(1 - percent, false);
 
         } else {
             topY = -(int) (percent * Math.abs(topDistance));
-            mainBgView.reBackCustomAlpha(percent ,255,false);
+            mainBgView.reBackCustomAlpha(percent, 255, false);
         }
         mainBgView.reBackQuadHeight(1 - percent, false);
         int desY = (int) computeRange(Math.abs(topDistance) + topY, 0, scrollHeight);
-        ViewCompat.setY(mainBgView , -desY);
+        ViewCompat.setY(mainBgView, -desY);
     }
 
     /**
      * 滚动view
+     *
      * @param percent
      */
-    public void scrollTo(float percent){
+    public void scrollTo(float percent) {
         ViewCompat.setY(mainBgView, -percent * (defQuadHeight + scrollHeight));
         mainBgView.setCustomAlpha(1 - percent, false);
         mainBgView.updateQuadHeight(1 - percent);
@@ -61,6 +61,7 @@ public class BgTouchController {
 
     /**
      * 下拉刷新滑动
+     *
      * @param percent
      */
     public void refreshPull(float percent) {
@@ -69,6 +70,7 @@ public class BgTouchController {
 
     /**
      * 下拉刷新,回弹
+     *
      * @param percent
      */
     public void refreshRelease(float percent) {
@@ -84,12 +86,13 @@ public class BgTouchController {
     /**
      * 设置额外的高度
      */
-    public void setOffset(int offsetHeight){
+    public void setOffset(int offsetHeight) {
         mainBgView.setOffsetHeight(offsetHeight);
     }
 
     /**
      * 控制范围
+     *
      * @param distance
      * @param min
      * @param max

@@ -9,11 +9,11 @@ import com.jwj.demo.androidapidemo.BaseAct;
 import com.jwj.demo.androidapidemo.R;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainAdapter;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainModel;
+import com.jwj.demo.androidapidemo.custom_view.refresh.SmartRefreshLayout;
+import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshLayout;
+import com.jwj.demo.androidapidemo.custom_view.refresh.listener.OnRefreshListener;
 import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView;
 import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +107,7 @@ public class IBUMainTouchAct extends BaseAct {
     }
 
 
-    public void loadDelay(){
+    public void loadDelay() {
 
         refreshLayout.postDelayed(new Runnable() {
             @Override
@@ -117,7 +117,7 @@ public class IBUMainTouchAct extends BaseAct {
                 mAdapter.getModels().add(ibuMainModel);
                 mAdapter.notifyDataSetChanged();
             }
-        },4000);
+        }, 4000);
     }
 
 

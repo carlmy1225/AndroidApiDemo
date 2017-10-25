@@ -9,8 +9,8 @@ import android.util.Log;
  * Copyright: Ctrip
  */
 
-public class RecyclerTouchController {
-    public String TAG = RecyclerTouchController.class.getSimpleName();
+public class IBUTouchRecyclerController {
+    public String TAG = IBUTouchRecyclerController.class.getSimpleName();
 
     /**
      * 滑动底部y坐标
@@ -31,13 +31,13 @@ public class RecyclerTouchController {
     /**
      * 滚动超过的部分
      */
-    int recyclerScrollTo =0;
+    int recyclerScrollTo = 0;
     int oldPaddingTop;
     IBUTouchRecyclerView recyclerView;
     IBUTouchController touchUtilNew;
 
 
-    public RecyclerTouchController(IBUTouchRecyclerView recyclerView, IBUTouchController ibuTouchController) {
+    public IBUTouchRecyclerController(IBUTouchRecyclerView recyclerView, IBUTouchController ibuTouchController) {
         this.recyclerView = recyclerView;
         this.touchUtilNew = ibuTouchController;
     }
@@ -49,24 +49,13 @@ public class RecyclerTouchController {
         recyclerBottomLimitY = recyclerOldY + refreshHeight;
         recyclerTopLimitY = recyclerView.getPaddingTop() - barBottom + recyclerScrollTo;  //滑动到顶部的距离
         oldPaddingTop = recyclerView.getPaddingTop();
-
         touchUtilNew.setBgScrollHeight(recyclerTopLimitY);
-
-        Log.d(TAG, "scrollY =" + recyclerView.getmTotalScrolled());
-        Log.d(TAG, "recyclerOldY =" + recyclerOldY);
-        Log.d(TAG, "recyclerBottomLimitY =" + recyclerBottomLimitY);
-        Log.d(TAG, "recyclerTopLimitY =" + recyclerTopLimitY);
     }
 
 
     public int getScrollY() {
         return recyclerView.getmTotalScrolled();
     }
-
-    public float getY() {
-        return recyclerView.getY();
-    }
-
 
     int topRecycler;
     int mLastY;
@@ -91,7 +80,7 @@ public class RecyclerTouchController {
 
     public boolean isAnimator(int isAutoScrollDirection, boolean isVelocityEnable, int barHeight) {
         Log.d(TAG, "isAnimator scrollY = " + getScrollY());
-        if (getScrollY() > recyclerTopLimitY) {
+        if (getScrollY() > recyclerTopLimitY + barHeight / 2) {
             return false;
         } else {
             if (isVelocityEnable) {

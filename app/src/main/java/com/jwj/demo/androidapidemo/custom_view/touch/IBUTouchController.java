@@ -7,7 +7,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -16,12 +15,10 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.jwj.demo.androidapidemo.R;
-import com.jwj.demo.androidapidemo.util.ViewUtil;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
-import com.scwang.smartrefresh.layout.listener.SimpleMultiPurposeListener;
+import com.jwj.demo.androidapidemo.custom_view.refresh.SmartRefreshLayout;
+import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshHeader;
+import com.jwj.demo.androidapidemo.custom_view.refresh.listener.SimpleMultiPurposeListener;
 
 /**
  * Description: 描述
@@ -66,19 +63,16 @@ public class IBUTouchController {
 
     boolean isInit;
 
-    RecyclerTouchController recyclerTouchController;
-    TopViewController topViewController;
+    IBUTouchRecyclerController recyclerTouchController;
+    IBUTouchTopController topViewController;
     ScrollAnimator animator;
-    BgTouchController bgTouchController;
+    IBUTouchBgController IBUTouchBgController;
 
     View barBgView;
     int topHeight;
 
     AutoScrollUtil autoScrollUtil;
     IBUTouchRecyclerView recyclerView;
-
-    AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
-
 
     public IBUTouchController(Context context) {
         this.mContext = context;
@@ -93,9 +87,9 @@ public class IBUTouchController {
         barBgView = parent.findViewWithTag(parent.getResources().getString(R.string.ibu_touch_barbgview_tag));
         SmartRefreshLayout refreshLayout = (SmartRefreshLayout) recyclerView.getParent();
 
-        recyclerTouchController = new RecyclerTouchController(recyclerView, this);
-        topViewController = new TopViewController(topView, this);
-        bgTouchController = new BgTouchController(mainBgView);
+        recyclerTouchController = new IBUTouchRecyclerController(recyclerView, this);
+        topViewController = new IBUTouchTopController(topView, this);
+        IBUTouchBgController = new IBUTouchBgController(mainBgView);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -105,7 +99,7 @@ public class IBUTouchController {
         });
         computeInitCondition(parent);
 
-        refreshLayout.setHeaderMaxDragRate(1f);
+//        refreshLayout.setHeaderMaxDragRate(1f);
         refreshLayout.setReboundInterpolator(new LinearInterpolator());
         refreshLayout.setOnMultiPurposeListener(new SimpleMultiPurposeListener() {
             @Override
@@ -116,7 +110,7 @@ public class IBUTouchController {
             @Override
             public void onHeaderReleasing(RefreshHeader header, float percent, int offset, int headerHeight, int extendHeight) {
                 onRefreshScroll(percent, offset, headerHeight);
-                bgTouchController.refreshRelease(percent);
+                IBUTouchBgController.refreshRelease(percent);
             }
 
             @Override
@@ -157,8 +151,6 @@ public class IBUTouchController {
     }
 
 
-
-
     public boolean onTouchEvent(MotionEvent event) {
         autoScrollUtil.onTouchEvent(event);
         switch (event.getAction()) {
@@ -185,6 +177,7 @@ public class IBUTouchController {
 
     /**
      * 滚动view
+     *
      * @param dy
      */
     public void onScroll(int dy) {
@@ -194,16 +187,16 @@ public class IBUTouchController {
             return;
         }
 
-        float percent = getRecyclerScrollY()* 1f / bgTouchController.scrollHeight;
+        float percent = getRecyclerScrollY() * 1f / IBUTouchBgController.scrollHeight;
         if (dy > 0) {
-            if(percent > 1){
+            if (percent > 1) {
                 percent = 1;
             }
-            bgTouchController.scrollTo(percent);
+            IBUTouchBgController.scrollTo(percent);
             topViewController.scrollTo(percent);
         } else if (dy < 0) {
-            if(percent <= 1){
-                bgTouchController.scrollTo(percent);
+            if (percent <= 1) {
+                IBUTouchBgController.scrollTo(percent);
                 topViewController.scrollTo(percent);
             }
         }
@@ -212,13 +205,14 @@ public class IBUTouchController {
 
     /**
      * 下拉刷新滚动
+     *
      * @param percent
      * @param deltaY
      * @param refreshHeight
      */
     public void onRefreshScroll(float percent, float deltaY, int refreshHeight) {
-        topViewController.refreshScroll(deltaY, refreshHeight);
-        bgTouchController.refreshPull(percent);
+        topViewController.refreshScroll(deltaY);
+        IBUTouchBgController.refreshPull(percent);
     }
 
 
@@ -237,7 +231,7 @@ public class IBUTouchController {
                 public void onAnimationStart(Animator animation, Object... args) {
                     topViewController.animatorStart();
                     recyclerTouchController.animatorStart();
-                    bgTouchController.animatorStart();
+                    IBUTouchBgController.animatorStart();
                 }
 
                 @Override
@@ -245,7 +239,7 @@ public class IBUTouchController {
                     float percent = (float) animation.getAnimatedValue();
                     topViewController.animator(percent, args);
                     recyclerTouchController.animator(percent, args);
-                    bgTouchController.animator(percent, args);
+                    IBUTouchBgController.animator(percent, args);
                     handleEffectAnimtor();
                 }
             };
@@ -314,7 +308,8 @@ public class IBUTouchController {
      * recyclerview 向下滚动停止的位置
      */
     public boolean shouldStopScroll(int dy) {
-        return recyclerTouchController.getScrollY() + dy <= recyclerTouchController.getRecyclerTopLimitY()
+        return (recyclerTouchController.getScrollY() + dy <= recyclerTouchController.getRecyclerTopLimitY()
+                || recyclerTouchController.getScrollY() <= recyclerTouchController.getRecyclerTopLimitY())
                 && dy < 0 && scrollFlag == 3;
     }
 
@@ -324,8 +319,8 @@ public class IBUTouchController {
     }
 
 
-    public void setBgScrollHeight(int scrollHeight){
-        bgTouchController.init(scrollHeight);
+    public void setBgScrollHeight(int scrollHeight) {
+        IBUTouchBgController.init(scrollHeight);
     }
 
 

@@ -11,17 +11,17 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.OnCompositionLoadedListener;
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
-import com.scwang.smartrefresh.layout.api.RefreshKernel;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.constant.RefreshState;
-import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshHeader;
+import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshKernel;
+import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshLayout;
+import com.jwj.demo.androidapidemo.custom_view.refresh.constant.RefreshState;
+import com.jwj.demo.androidapidemo.custom_view.refresh.constant.SpinnerStyle;
+import com.jwj.demo.androidapidemo.custom_view.refresh.util.DensityUtil;
 
 /**
  * Description: 描述
@@ -30,7 +30,7 @@ import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
  * Copyright: Ctrip
  */
 
-public class RefreshLottieHeader extends FrameLayout implements RefreshHeader {
+public class IBUTouchRefreshHeader extends FrameLayout implements RefreshHeader {
 
     boolean isRefreshing;
     LottieComposition data1, data2;
@@ -38,12 +38,12 @@ public class RefreshLottieHeader extends FrameLayout implements RefreshHeader {
 
     boolean isAdd;
 
-    public RefreshLottieHeader(Context context) {
+    public IBUTouchRefreshHeader(Context context) {
         super(context);
         init();
     }
 
-    public RefreshLottieHeader(Context context, AttributeSet attrs) {
+    public IBUTouchRefreshHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -55,13 +55,13 @@ public class RefreshLottieHeader extends FrameLayout implements RefreshHeader {
 
     void init() {
         createLottieView();
-        LottieComposition.Factory.fromAssetFileName(getContext(), "data1.json", new OnCompositionLoadedListener() {
+        LottieComposition.Factory.fromAssetFileName(getContext(), "refresh_one.json", new OnCompositionLoadedListener() {
             @Override
             public void onCompositionLoaded(@Nullable LottieComposition composition) {
                 preView.setComposition(composition);
             }
         });
-        LottieComposition.Factory.fromAssetFileName(getContext(), "data2.json", new OnCompositionLoadedListener() {
+        LottieComposition.Factory.fromAssetFileName(getContext(), "refresh_two.json", new OnCompositionLoadedListener() {
             @Override
             public void onCompositionLoaded(@Nullable LottieComposition composition) {
                 afterView.setComposition(composition);
@@ -75,19 +75,18 @@ public class RefreshLottieHeader extends FrameLayout implements RefreshHeader {
             }
         });
         afterView.loop(true);
+        setAlpha(0f);
     }
 
     void createLottieView() {
         preView = new LottieAnimationView(getContext());
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(DensityUtil.dp2px(60), DensityUtil.dp2px(62));
         params.gravity = Gravity.CENTER_HORIZONTAL;
-        params.topMargin = 50;
         addView(preView, params);
 
         afterView = new LottieAnimationView(getContext());
-        LayoutParams params1 = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        LayoutParams params1 = new LayoutParams(DensityUtil.dp2px(60), DensityUtil.dp2px(62));
         params1.gravity = Gravity.CENTER_HORIZONTAL;
-        params1.topMargin = 50;
         addView(afterView, params1);
     }
 

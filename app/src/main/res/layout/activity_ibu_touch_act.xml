@@ -29,16 +29,20 @@
         </com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView>
 
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        <com.jwj.demo.androidapidemo.custom_view.refresh.SmartRefreshLayout
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:srlEnableOverScrollDrag="false"
-            app:srlHeaderTriggerRate="0.7">
+            app:srlDragRate="0.7"
+            app:srlHeaderMaxDragRate="1.3"
+            app:srlHeaderHeight="70dp"
+            app:srlEnablePreviewInEditMode="true"
+            app:srlEnableOverScrollDrag="false">
 
-            <com.jwj.demo.androidapidemo.custom_view.touch.RefreshLottieHeader
+            <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRefreshHeader
                 android:layout_width="match_parent"
-                android:layout_height="60dp" />
+                android:layout_height="60dp"
+                android:layout_marginTop="16dp" />
 
             <com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView
                 android:id="@+id/ibu_recycler_view"
@@ -50,7 +54,7 @@
                 android:fadingEdgeLength="0dp"
                 android:clipToPadding="false"
                 app:top_visible_view_id="@+id/top_content_view" />
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </com.jwj.demo.androidapidemo.custom_view.refresh.SmartRefreshLayout>
 
 
         <View
