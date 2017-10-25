@@ -113,8 +113,8 @@ public class IBUMainTouchAct extends BaseAct {
             @Override
             public void run() {
                 IBUMainModel ibuMainModel = new IBUMainModel();
-                ibuMainModel.itemType = IBUMainAdapter.TYPE_INFO_ITEM;
-                mAdapter.getModels().add(ibuMainModel);
+                ibuMainModel.itemType = IBUMainAdapter.TYPE_ICON_ITEM;
+                mAdapter.getModels().add(0,ibuMainModel);
                 mAdapter.notifyDataSetChanged();
             }
         },4000);

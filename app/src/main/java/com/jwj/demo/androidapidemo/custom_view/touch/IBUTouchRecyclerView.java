@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.ScrollerCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
 
 import com.jwj.demo.androidapidemo.R;
 
@@ -47,10 +49,62 @@ public class IBUTouchRecyclerView extends RecyclerView {
         resId = array.getResourceId(R.styleable.IBuTouchView_top_visible_view_id, 0);
         activity = (Activity) context;
         init();
+
+
     }
 
+    ScrollerCompat scrollerCompat;
+
     private void init() {
+        scrollerCompat = ScrollerCompat.create(getContext() ,sQuinticInterpolator);
     }
+
+    @Override
+    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+
+        Log.d("preFling_velocityY = " , velocityY + "");
+        velocityY *= 0.5f;
+
+        Log.d("preFling_before_scrolly = " , getmTotalScrolled() + "");
+
+        boolean b = super.dispatchNestedPreFling(velocityX, velocityY);
+
+        Log.d("preFling_after_scrolly = " , getmTotalScrolled() + "");
+
+
+        return  b;
+    }
+
+
+
+
+    static final Interpolator sQuinticInterpolator = new Interpolator() {
+        @Override
+        public float getInterpolation(float t) {
+            t -= 1.0f;
+            return t * t * t * t * t + 1.0f;
+        }
+    };
+
+
+    @Override
+    public boolean fling(int velocityX, int velocityY) {
+
+        Log.d("fling_velocityY = " , velocityY + "");
+        Log.d("fling_before_scrolly = " , getmTotalScrolled() + "");
+
+        boolean b = super.fling(velocityX, velocityY);
+
+        Log.d("fling_after_scrolly = " , getmTotalScrolled() + "");
+
+
+
+        return  b;
+    }
+
+
+
+
 
 
     @Override
@@ -60,7 +114,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
     }
 
     public LayoutManager setLinearLayoutManager() {
-        LayoutManager manager = new LinearLayoutManager(getContext()) {
+        LayoutManager manager = new ScrollSpeedLinearLayoutManger(getContext()) {
             @Override
             public void onLayoutCompleted(State state) {
                 super.onLayoutCompleted(state);
@@ -74,7 +128,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
                 if (contentLength + mTopVisibleHeight > getHeight()) {
                     isInterceptd = true;
                 } else {
-                    isInterceptd = false;
+                    isInterceptd =  false;
                 }
             }
         };
@@ -136,13 +190,41 @@ public class IBUTouchRecyclerView extends RecyclerView {
 
 
     @Override
-    public boolean onTouchEvent(MotionEvent e) {
+    public boolean dispatchTouchEvent(MotionEvent ev) {
         if (!isInit) {
             controller.init((ViewGroup) getParent().getParent());
             isInit = true;
         }
+
+        controller.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+
         controller.onTouchEvent(e);
         return super.onTouchEvent(e);
+    }
+
+
+    @Override
+    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
+        if(onPreScrollListener !=null){
+            return onPreScrollListener.onPreScroll(dy);
+        }
+        return super.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
+    }
+
+    OnPreScrollListener onPreScrollListener;
+
+    public void setOnPreScrollListener(OnPreScrollListener onPreScrollListener) {
+        this.onPreScrollListener = onPreScrollListener;
+    }
+
+    public interface OnPreScrollListener{
+
+        boolean onPreScroll(int detaY);
     }
 
 }
