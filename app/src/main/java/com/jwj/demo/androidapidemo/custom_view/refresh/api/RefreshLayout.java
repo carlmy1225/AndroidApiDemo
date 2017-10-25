@@ -8,7 +8,6 @@ import android.view.animation.Interpolator;
 
 import com.jwj.demo.androidapidemo.custom_view.refresh.constant.RefreshState;
 import com.jwj.demo.androidapidemo.custom_view.refresh.listener.OnMultiPurposeListener;
-import com.jwj.demo.androidapidemo.custom_view.refresh.listener.OnRefreshListener;
 
 /**
  * 刷新布局
@@ -168,10 +167,6 @@ public interface RefreshLayout {
      */
     RefreshLayout setEnableNestedScroll(boolean enabled);
 
-    /**
-     * 单独设置刷新监听器
-     */
-    RefreshLayout setOnRefreshListener(OnRefreshListener listener);
 
 //    /**
 //     * 单独设置加载监听器
@@ -261,11 +256,11 @@ public interface RefreshLayout {
     @Nullable
     RefreshHeader getRefreshHeader();
 
-    /**
-     * 获取当前 Footer
-     */
-    @Nullable
-    RefreshFooter getRefreshFooter();
+//    /**
+//     * 获取当前 Footer
+//     */
+//    @Nullable
+//    RefreshFooter getRefreshFooter();
 
     /**
      * 获取当前状态

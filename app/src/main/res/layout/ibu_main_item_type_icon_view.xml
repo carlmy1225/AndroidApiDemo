@@ -3,26 +3,7 @@
     android:id="@+id/icon_view_item_layout"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="350dp">
 
-    <ImageView
-        android:id="@+id/wechat_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:src="@mipmap/icon_sns_wechat" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/icon_sns_wechat"
-        android:layout_weight="1" />
-
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/icon_sns_wechat"
-        android:layout_weight="1" />
 
 </LinearLayout>

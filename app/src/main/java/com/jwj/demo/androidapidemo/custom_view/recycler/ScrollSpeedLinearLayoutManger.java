@@ -1,4 +1,4 @@
-package com.jwj.demo.androidapidemo.custom_view.touch;
+package com.jwj.demo.androidapidemo.custom_view.recycler;
 
 import android.content.Context;
 import android.graphics.PointF;
@@ -46,11 +46,11 @@ public class ScrollSpeedLinearLayoutManger extends LinearLayoutManager {
 
         @Override
         public int calculateDtToFit(int viewStart, int viewEnd, int boxStart, int boxEnd, int snapPreference) {
-            return 0; //(boxStart + (boxEnd - boxStart) / 2) - (viewStart + (viewEnd - viewStart) / 2);
+            return (boxStart + (boxEnd - boxStart) / 2) - (viewStart + (viewEnd - viewStart) / 2);
         }
 
         protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-            return 0.2f;
+            return 0.1f;
         }
 
         @Override

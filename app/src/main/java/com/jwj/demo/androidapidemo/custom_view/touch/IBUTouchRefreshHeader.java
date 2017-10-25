@@ -19,9 +19,8 @@ import com.airbnb.lottie.OnCompositionLoadedListener;
 import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshHeader;
 import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshKernel;
 import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshLayout;
-import com.jwj.demo.androidapidemo.custom_view.refresh.constant.RefreshState;
 import com.jwj.demo.androidapidemo.custom_view.refresh.constant.SpinnerStyle;
-import com.jwj.demo.androidapidemo.custom_view.refresh.util.DensityUtil;
+import com.jwj.demo.androidapidemo.util.DensityUtil;
 
 /**
  * Description: 描述
@@ -148,10 +147,6 @@ public class IBUTouchRefreshHeader extends FrameLayout implements RefreshHeader 
         return false;
     }
 
-    @Override
-    public void onStateChanged(RefreshLayout refreshLayout, RefreshState oldState, RefreshState newState) {
-
-    }
 
     @Override
     public void onRefreshReleased(RefreshLayout layout, int headerHeight, int extendHeight) {

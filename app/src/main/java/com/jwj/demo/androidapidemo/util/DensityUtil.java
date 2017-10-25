@@ -1,4 +1,4 @@
-package com.jwj.demo.androidapidemo.custom_view.refresh.util;
+package com.jwj.demo.androidapidemo.util;
 
 import android.content.res.Resources;
 

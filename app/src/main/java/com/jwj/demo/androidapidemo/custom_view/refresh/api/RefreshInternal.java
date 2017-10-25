@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.jwj.demo.androidapidemo.custom_view.refresh.constant.SpinnerStyle;
-import com.jwj.demo.androidapidemo.custom_view.refresh.listener.OnStateChangedListener;
 
 
 /**
@@ -13,7 +12,7 @@ import com.jwj.demo.androidapidemo.custom_view.refresh.listener.OnStateChangedLi
  * Created by SCWANG on 2017/5/26.
  */
 
-public interface RefreshInternal extends OnStateChangedListener {
+public interface RefreshInternal {
     /**
      * 获取实体视图
      */

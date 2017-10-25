@@ -9,7 +9,6 @@ import com.jwj.demo.androidapidemo.custom_view.refresh.SmartRefreshLayout;
 import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshHeader;
 import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshKernel;
 import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshLayout;
-import com.jwj.demo.androidapidemo.custom_view.refresh.constant.RefreshState;
 import com.jwj.demo.androidapidemo.custom_view.refresh.constant.SpinnerStyle;
 
 /**
@@ -97,11 +96,6 @@ public class RefreshHeaderWrapper implements RefreshHeader {
 
     @Override
     public void onStartAnimator(RefreshLayout layout, int headHeight, int extendHeight) {
-
-    }
-
-    @Override
-    public void onStateChanged(RefreshLayout refreshLayout, RefreshState oldState, RefreshState newState) {
 
     }
 }

@@ -1,6 +1,7 @@
 package com.jwj.demo.androidapidemo.custom_view.touch;
 
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
 
 /**
  * Description: 描述
@@ -54,6 +55,9 @@ public class IBUTouchRecyclerController {
 
 
     public int getScrollY() {
+        if (!shouldScroll()) {
+            return 1000;
+        }
         return recyclerView.getmTotalScrolled();
     }
 
@@ -79,7 +83,6 @@ public class IBUTouchRecyclerController {
     }
 
     public boolean isAnimator(int isAutoScrollDirection, boolean isVelocityEnable, int barHeight) {
-        Log.d(TAG, "isAnimator scrollY = " + getScrollY());
         if (getScrollY() > recyclerTopLimitY + barHeight / 2) {
             return false;
         } else {
@@ -92,6 +95,28 @@ public class IBUTouchRecyclerController {
             }
             return true;
         }
+    }
+
+
+//    public boolean shouldStopScrollDown() {
+//        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//        View view = layoutManager.findViewByPosition(0);
+//        if (view == null) {
+//            return false;
+//        } else if (Math.abs(view.getTop()) <= recyclerTopLimitY) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
+
+    public boolean shouldScroll() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        View view = layoutManager.findViewByPosition(0);
+        if (view == null) {
+            return false;
+        }
+        return true;
     }
 
 

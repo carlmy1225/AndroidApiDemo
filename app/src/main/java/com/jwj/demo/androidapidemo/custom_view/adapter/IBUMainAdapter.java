@@ -119,7 +119,7 @@ public class IBUMainAdapter extends RecyclerView.Adapter {
 
         public IconViewHolder(View itemView) {
             super(itemView);
-            trainIcon = (ImageView) itemView.findViewById(R.id.wechat_icon);
+//            trainIcon = (ImageView) itemView.findViewById(R.id.wechat_icon);
         }
     }
 

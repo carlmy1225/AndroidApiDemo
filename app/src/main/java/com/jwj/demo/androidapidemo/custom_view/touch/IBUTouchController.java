@@ -134,28 +134,6 @@ public class IBUTouchController {
     LinearLayoutManager layoutManager;
 
     void initRecyclerView() {
-
-        layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-        View firstChild = layoutManager.getChildAt(0);
-        offset = firstChild.getTop();
-        lastPosition = layoutManager.getPosition(firstChild);
-
-        recyclerView.setOnFlingListener(new RecyclerView.OnFlingListener() {
-            @Override
-            public boolean onFling(int velocityX, int velocityY) {
-                return false;
-            }
-
-
-        });
-
-        recyclerView.setOnPreScrollListener(new IBUTouchRecyclerView.OnPreScrollListener() {
-            @Override
-            public boolean onPreScroll(int dy) {
-
-                return true;
-            }
-        });
     }
 
 
@@ -223,8 +201,6 @@ public class IBUTouchController {
         }
 
         if (shouldStopScroll(dy)) {
-            Log.d("onScroll_1 = ", getRecyclerScrollY() + "");
-
             recyclerView.stopScroll();
             startAnimator(1, true);
             return;
@@ -366,8 +342,7 @@ public class IBUTouchController {
      * 120 , -10  110   -12  98 100
      */
     public boolean shouldStopScroll(int dy) {
-        return recyclerTouchController.getScrollY() <= recyclerTouchController.getRecyclerTopLimitY()
-                && dy < 0 && scrollFlag == 3;
+        return getRecyclerScrollY() <= recyclerTouchController.getRecyclerTopLimitY() && dy < 0 && scrollFlag == 3;
     }
 
 

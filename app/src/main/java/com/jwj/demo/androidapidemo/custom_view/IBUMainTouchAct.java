@@ -10,8 +10,6 @@ import com.jwj.demo.androidapidemo.R;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainAdapter;
 import com.jwj.demo.androidapidemo.custom_view.adapter.IBUMainModel;
 import com.jwj.demo.androidapidemo.custom_view.refresh.SmartRefreshLayout;
-import com.jwj.demo.androidapidemo.custom_view.refresh.api.RefreshLayout;
-import com.jwj.demo.androidapidemo.custom_view.refresh.listener.OnRefreshListener;
 import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchBgView;
 import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView;
 
@@ -48,15 +46,6 @@ public class IBUMainTouchAct extends BaseAct {
         refreshLayout = (SmartRefreshLayout) findViewById(R.id.refresh_layout);
 
         bgView.showImage(getResources().getDrawable(R.mipmap.myctrip_bg_home), false);
-
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(RefreshLayout refreshlayout) {
-
-            }
-        });
-
-
         loadData();
 //        bgView.postDelayed(new Runnable() {
 //            @Override
@@ -108,16 +97,10 @@ public class IBUMainTouchAct extends BaseAct {
 
 
     public void loadDelay() {
-
-        refreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                IBUMainModel ibuMainModel = new IBUMainModel();
-                ibuMainModel.itemType = IBUMainAdapter.TYPE_ICON_ITEM;
-                mAdapter.getModels().add(0,ibuMainModel);
-                mAdapter.notifyDataSetChanged();
-            }
-        }, 4000);
+        IBUMainModel ibuMainModel = new IBUMainModel();
+        ibuMainModel.itemType = IBUMainAdapter.TYPE_ICON_ITEM;
+        mAdapter.getModels().add(0, ibuMainModel);
+        mAdapter.notifyDataSetChanged();
     }
 
 

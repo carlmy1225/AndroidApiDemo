@@ -57,7 +57,7 @@ public class RefreshContentWrapper implements RefreshContent {
     protected boolean mEnableRefresh = true;
     protected boolean mEnableLoadmore = true;
     protected MotionEvent mMotionEvent;
-    protected com.jwj.demo.androidapidemo.custom_view.refresh.impl.ScrollBoundaryDeciderAdapter mBoundaryAdapter = new com.jwj.demo.androidapidemo.custom_view.refresh.impl.ScrollBoundaryDeciderAdapter();
+    protected ScrollBoundaryDeciderAdapter mBoundaryAdapter = new ScrollBoundaryDeciderAdapter();
 
     public RefreshContentWrapper(View view) {
         this.mContentView = mRealContentView = view;

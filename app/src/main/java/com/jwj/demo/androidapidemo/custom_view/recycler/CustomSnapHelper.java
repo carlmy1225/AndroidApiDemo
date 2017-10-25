@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.View;
 
+import com.jwj.demo.androidapidemo.util.DensityUtil;
+
 /**
  * Description: 描述
  * Author: wjxie
@@ -136,9 +138,9 @@ public class CustomSnapHelper extends SnapHelper {
         if (childCount == 0) {
             return null;
         }
-
         LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
-        return linearLayoutManager.findViewByPosition(0);
+        View view = linearLayoutManager.findViewByPosition(0);
+        return view;
     }
 
 
@@ -196,8 +198,18 @@ public class CustomSnapHelper extends SnapHelper {
     private int distanceToCenter(@NonNull RecyclerView.LayoutManager layoutManager,
                                  @NonNull View targetView, OrientationHelper helper) {
         //找到targetView的中心坐标
-        final int childCenter = helper.getDecoratedStart(targetView) +
-                (helper.getDecoratedMeasurement(targetView) / 2);
+        int top = targetView.getTop();
+
+        int childPosition = 0;
+        if (Math.abs(top) > DensityUtil.dp2px(180)) {
+            int start = helper.getDecoratedStart(targetView);
+            int height = helper.getDecoratedMeasurement(targetView);
+            childPosition = start + height / 2;
+        } else {
+            childPosition = helper.getDecoratedStart(targetView);
+        }
+//        final int childCenter = helper.getDecoratedStart(targetView) +
+//                (helper.getDecoratedMeasurement(targetView) / 2);
         final int containerCenter;
         //找到容器（RecyclerView）的中心坐标
         if (layoutManager.getClipToPadding()) {
@@ -206,7 +218,7 @@ public class CustomSnapHelper extends SnapHelper {
             containerCenter = helper.getEnd() / 2;
         }
         //两个中心坐标的差值就是targetView需要滚动的距离
-        return childCenter - containerCenter;
+        return childPosition - containerCenter;
     }
 
     private int estimateNextPositionDiffForFling(RecyclerView.LayoutManager layoutManager,

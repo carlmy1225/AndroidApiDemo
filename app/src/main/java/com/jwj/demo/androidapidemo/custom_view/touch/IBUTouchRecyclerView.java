@@ -15,6 +15,7 @@ import android.view.animation.Interpolator;
 
 import com.jwj.demo.androidapidemo.R;
 import com.jwj.demo.androidapidemo.custom_view.recycler.CustomSnapHelper;
+import com.jwj.demo.androidapidemo.custom_view.recycler.ScrollSpeedLinearLayoutManger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
     int resId;
     Activity activity;
     boolean isInterceptd = false;
-    //    IBUTouchController controller;
+    IBUTouchController controller;
     private boolean isInit;
 
     Map<Integer, Integer> childTypeHeight = new HashMap<>();
@@ -129,7 +130,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
             View view = activity.findViewById(resId);
             if (view != null) mTopVisibleHeight = view.getMeasuredHeight();
         }
-        setPadding(getPaddingLeft(), getPaddingTop() + mTopVisibleHeight, getPaddingRight(), getPaddingBottom());
+//        setPadding(getPaddingLeft(), getPaddingTop() + mTopVisibleHeight, getPaddingRight(), getPaddingBottom());
     }
 
 
@@ -138,46 +139,29 @@ public class IBUTouchRecyclerView extends RecyclerView {
         super.onScrolled(dx, dy);
     }
 
-    public int getmTotalScrolled() {
-        //return mTotalScrolled;
-        LinearLayoutManager layoutManager = (LinearLayoutManager) this.getLayoutManager();
-        int position = layoutManager.findFirstVisibleItemPosition();
-        View firstVisiableChildView = layoutManager.findViewByPosition(position);
 
-        if (firstVisiableChildView != null) {
-            int itemHeight = firstVisiableChildView.getHeight();
-            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) firstVisiableChildView.getLayoutParams();
-            if (getAdapter() != null) {
-                int type = getAdapter().getItemViewType(position);
-                itemHeight += params.topMargin + params.bottomMargin;
-                childTypeHeight.put(type, itemHeight);
-            }
-            int scrollY = getTotalHeight(position) - (int) firstVisiableChildView.getTop() + getPaddingTop();
-            return scrollY;
-        } else {
-            return 0;
-        }
+    public View getFirstChild() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) this.getLayoutManager();
+        return layoutManager.findViewByPosition(0);
     }
 
 
-    public int getTotalHeight(int position) {
-        int total = 0;
-        if (getAdapter() != null) {
-            for (int i = 0; i < position; i++) {
-                int type = getAdapter().getItemViewType(position);
-                total += childTypeHeight.get(type);
-            }
+    public int getmTotalScrolled() {
+        View view = getFirstChild();
+        if (view == null) {
+            return 0;
+        } else {
+            return 835 - view.getTop();
         }
-        return total;
     }
 
 
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (!isInit) {
+//        if (!isInit) {
 //            controller.init((ViewGroup) getParent().getParent());
-            isInit = true;
-        }
-
+//            isInit = true;
+//        }
+//
 //        controller.onTouchEvent(ev);
         return super.dispatchTouchEvent(ev);
     }
