@@ -7,29 +7,50 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.view.View;
+
+import com.jwj.demo.androidapidemo.custom_view.touch.IBUTouchRecyclerView;
 
 /**
  * Created by jwj on 17/10/25.
  */
 public class ScrollSpeedLinearLayoutManger extends LinearLayoutManager {
 
+    private IBUTouchRecyclerView touchRecyclerView;
 
-    public ScrollSpeedLinearLayoutManger(Context context) {
+    public ScrollSpeedLinearLayoutManger(Context context, IBUTouchRecyclerView ibuTouchRecyclerView) {
         super(context, VERTICAL, false);
-    }
-
-    public ScrollSpeedLinearLayoutManger(Context context, int orientation, boolean reverseLayout) {
-        super(context, orientation, reverseLayout);
+        this.touchRecyclerView = ibuTouchRecyclerView;
     }
 
 
     @Override
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
-        Log.e("linksu", "smoothScrollToPosition(ScrollSpeedLinearLayoutManger.java:62)");
         RecyclerView.SmoothScroller smoothScroller = new CenterSmoothScroller(recyclerView.getContext());
         smoothScroller.setTargetPosition(position);
         startSmoothScroll(smoothScroller);
+    }
+
+    public int getScrollY() {
+        if (!shouldScroll()) {
+            return 1000;
+        }
+        return touchRecyclerView.getmTotalScrolled();
+    }
+
+    public boolean shouldScroll() {
+        LinearLayoutManager layoutManager = (LinearLayoutManager) touchRecyclerView.getLayoutManager();
+        View view = layoutManager.findViewByPosition(0);
+        if (view == null) {
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
+    public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        return super.scrollVerticallyBy(dy, recycler, state);
     }
 
     private class CenterSmoothScroller extends LinearSmoothScroller {
@@ -50,7 +71,7 @@ public class ScrollSpeedLinearLayoutManger extends LinearLayoutManager {
         }
 
         protected float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
-            return 0.1f;
+            return 0.5f;
         }
 
         @Override

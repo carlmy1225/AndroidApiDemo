@@ -3,7 +3,6 @@ package com.jwj.demo.androidapidemo.custom_view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.jwj.demo.androidapidemo.BaseAct;
 import com.jwj.demo.androidapidemo.R;
 
@@ -16,10 +15,10 @@ public class ScrollViewAct extends BaseAct {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.scroll_view_layout);
+        setContentView(R.layout.test_imgae);
 
-        LottieAnimationView lottieView = (LottieAnimationView) findViewById(R.id.lottie_view);
-        lottieView.loop(true);
-        lottieView.playAnimation();
+//        LottieAnimationView lottieView = (LottieAnimationView) findViewById(R.id.lottie_view);
+//        lottieView.loop(true);
+//        lottieView.playAnimation();
     }
 }

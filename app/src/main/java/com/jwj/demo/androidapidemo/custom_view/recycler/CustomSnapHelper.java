@@ -59,6 +59,11 @@ public class CustomSnapHelper extends SnapHelper {
     }
 
     @Override
+    public boolean onFling(int velocityX, int velocityY) {
+        return super.onFling(velocityX, velocityY);
+    }
+
+    @Override
     public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
         //判断layoutManager是否实现了RecyclerView.SmoothScroller.ScrollVectorProvider这个接口
         if (!(layoutManager instanceof RecyclerView.SmoothScroller.ScrollVectorProvider)) {
@@ -204,7 +209,7 @@ public class CustomSnapHelper extends SnapHelper {
         if (Math.abs(top) > DensityUtil.dp2px(180)) {
             int start = helper.getDecoratedStart(targetView);
             int height = helper.getDecoratedMeasurement(targetView);
-            childPosition = start + height / 2;
+            childPosition = height + start;  //start + height / 2;
         } else {
             childPosition = helper.getDecoratedStart(targetView);
         }
@@ -218,13 +223,13 @@ public class CustomSnapHelper extends SnapHelper {
             containerCenter = helper.getEnd() / 2;
         }
         //两个中心坐标的差值就是targetView需要滚动的距离
-        return childPosition - containerCenter;
+        return childPosition;//- containerCenter;
     }
 
     private int estimateNextPositionDiffForFling(RecyclerView.LayoutManager layoutManager,
                                                  OrientationHelper helper, int velocityX, int velocityY) {
         //计算滚动的总距离，这个距离受到触发fling时的速度的影响
-        int[] distances = calculateScrollDistance(velocityX, velocityY);
+        int[] distances = calculateScrollDistance(velocityX, (int) (velocityY * 0.5f));
         //计算每个ItemView的长度
         float distancePerChild = computeDistancePerChild(layoutManager, helper);
         if (distancePerChild <= 0) {

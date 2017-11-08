@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.jwj.demo.androidapidemo.custom_view.page.PageContainer
+        android:id="@+id/page_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff00D3E6">
+
+        <com.jwj.demo.androidapidemo.custom_view.page.PageImageView
+            android:id="@+id/cloud"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/myctrip_wind_bg" />
+
+        <com.jwj.demo.androidapidemo.custom_view.page.PageImageView
+            android:id="@+id/hourse_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@mipmap/myctrip_hourse_shadow_bg" />
+
+        <com.jwj.demo.androidapidemo.custom_view.page.PageImageView
+            android:id="@+id/hourse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@mipmap/myctrip_hourse_bg" />
+
+        <com.jwj.demo.androidapidemo.custom_view.page.PageImageView
+            android:id="@+id/hotel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:pageShowPercent="0.4"
+            app:pageLeftPercent="0.274"
+            android:scaleType="fitXY"
+            android:src="@mipmap/myctrip_hotel_bg" />
+
+        <com.jwj.demo.androidapidemo.custom_view.page.PageImageView
+            android:id="@+id/train"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:pageLeftPercent="0.071"
+            app:pageShowPercent="0.4"
+            android:scaleType="fitXY"
+            android:src="@mipmap/myctrip_train_bg" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="9dp"
+            android:background="#1F81F9" />
+
+        <com.jwj.demo.androidapidemo.custom_view.page.PageImageView
+            android:id="@+id/tree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@mipmap/myctrip_tree_bg" />
+
+        <com.jwj.demo.androidapidemo.custom_view.page.PageImageView
+            android:id="@+id/plane"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:layout_marginRight="40dp"
+            android:src="@mipmap/myctrip_plane_bg" />
+
+        <com.jwj.demo.androidapidemo.custom_view.page.PageImageView
+            android:id="@+id/people"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:pageEnableScroll="false"
+            android:scaleType="fitXY"
+            android:src="@mipmap/myctrip_welcome_people" />
+
+
+    </com.jwj.demo.androidapidemo.custom_view.page.PageContainer>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000" />
+
+    <com.jwj.demo.androidapidemo.custom_view.page.PageIndicatorView
+        android:id="@+id/page_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:orientation="horizontal" />
+
+</FrameLayout>

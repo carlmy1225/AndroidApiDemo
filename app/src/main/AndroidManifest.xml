@@ -58,14 +58,29 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
 
-        <activity android:name=".custom_view.IBUMainTouchAct"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".touch_event.TouchEventActivity"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".custom_view.ScrollViewAct"
+        <activity
+            android:name=".custom_view.IBUMainTouchAct"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".touch_event.TouchEventActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".custom_view.ScrollViewAct"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".widget.TestSysViewAct"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".custom_view.page.WelcomePageActivity"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".graphic.GraphicTestAct" />
+
 
     </application>
 

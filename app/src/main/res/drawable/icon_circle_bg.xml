@@ -1,5 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <solid android:color="#ffffffff" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Drop Shadow Stack -->
+    <item>
+        <shape android:shape="oval">
+            <padding
+                android:bottom="1dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp" />
+
+            <solid android:color="#00CCCCCC" />
+
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <padding
+                android:bottom="1dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp" />
+
+            <solid android:color="#08777777" />
+
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <padding
+                android:bottom="1dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp" />
+
+            <solid android:color="#18777777" />
+
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <padding
+                android:bottom="1dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp" />
+
+            <solid android:color="#28777777" />
+
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+    <!--<item>-->
+    <!--<shape android:shape="oval">-->
+    <!--<padding-->
+    <!--android:bottom="1dp"-->
+    <!--android:left="1dp"-->
+    <!--android:right="1dp"-->
+    <!--android:top="1dp" />-->
+
+    <!--<solid android:color="#50ffffff" />-->
+
+    <!--<corners android:radius="3dp" />-->
+    <!--</shape>-->
+    <!--</item>-->
+
+    <!-- Background -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@android:color/white" />
+            <corners android:radius="3dp" />
+        </shape>
+    </item>
+
+</layer-list>

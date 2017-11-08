@@ -97,10 +97,15 @@ public class IBUMainTouchAct extends BaseAct {
 
 
     public void loadDelay() {
-        IBUMainModel ibuMainModel = new IBUMainModel();
-        ibuMainModel.itemType = IBUMainAdapter.TYPE_ICON_ITEM;
-        mAdapter.getModels().add(0, ibuMainModel);
-        mAdapter.notifyDataSetChanged();
+        bgView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                IBUMainModel ibuMainModel = new IBUMainModel();
+                ibuMainModel.itemType = IBUMainAdapter.TYPE_ICON_ITEM;
+                mAdapter.getModels().add(0, ibuMainModel);
+                mAdapter.notifyDataSetChanged();
+            }
+        }, 4000);
     }
 
 

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2681FF">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="163dp"
+        android:layout_height="39dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="160dp"
+        android:src="@mipmap/myctrip_home_ctrip_icon" />
+
+    <TextView
+        android:id="@+id/new_brand_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/logo"
+        android:layout_marginTop="17dp"
+        android:text="Ctrip's new global brand"
+        android:textColor="#97C3FF"
+        android:textSize="17sp" />
+
+    <TextView
+        android:layout_marginTop="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/new_brand_tv"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/my_demo_cn_btn_bg"
+        android:text="Open the new 6.0"
+        android:paddingLeft="36dp"
+        android:paddingRight="36dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:textSize="19sp"
+        android:textColor="#ffffff" />
+
+</RelativeLayout>

@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.ScrollerCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Interpolator;
 
 import com.jwj.demo.androidapidemo.R;
-import com.jwj.demo.androidapidemo.custom_view.recycler.CustomSnapHelper;
 import com.jwj.demo.androidapidemo.custom_view.recycler.ScrollSpeedLinearLayoutManger;
 
 import java.util.HashMap;
@@ -49,58 +45,15 @@ public class IBUTouchRecyclerView extends RecyclerView {
         resId = array.getResourceId(R.styleable.IBuTouchView_top_visible_view_id, 0);
         activity = (Activity) context;
         init();
-
-
     }
 
-    ScrollerCompat scrollerCompat;
 
     private void init() {
-        scrollerCompat = ScrollerCompat.create(getContext(), sQuinticInterpolator);
     }
 
-    @Override
-    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
-
-        Log.d("preFling_velocityY = ", velocityY + "");
-        velocityY *= 0.5f;
-        boolean b = super.dispatchNestedPreFling(velocityX, velocityY);
-        return b;
-    }
-
-
-    static final Interpolator sQuinticInterpolator = new Interpolator() {
-        @Override
-        public float getInterpolation(float t) {
-            t -= 1.0f;
-            return t * t * t * t * t + 1.0f;
-        }
-    };
-
-
-    @Override
-    public boolean fling(int velocityX, int velocityY) {
-
-        Log.d("fling_velocityY = ", velocityY + "");
-        Log.d("fling_before_scrolly = ", getmTotalScrolled() + "");
-
-        boolean b = super.fling(velocityX, velocityY);
-
-        Log.d("fling_after_scrolly = ", getmTotalScrolled() + "");
-
-
-        return b;
-    }
-
-
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-//        controller = new IBUTouchController(getContext());
-    }
 
     public LayoutManager setLinearLayoutManager() {
-        LayoutManager manager = new ScrollSpeedLinearLayoutManger(getContext()) {
+        LayoutManager manager = new ScrollSpeedLinearLayoutManger(getContext(), this) {
             @Override
             public void onLayoutCompleted(State state) {
                 super.onLayoutCompleted(state);
@@ -118,7 +71,7 @@ public class IBUTouchRecyclerView extends RecyclerView {
             }
         };
         setLayoutManager(manager);
-        new CustomSnapHelper().attachToRecyclerView(this);
+//        new CustomSnapHelper().attachToRecyclerView(this);
         return manager;
     }
 
@@ -130,13 +83,6 @@ public class IBUTouchRecyclerView extends RecyclerView {
             View view = activity.findViewById(resId);
             if (view != null) mTopVisibleHeight = view.getMeasuredHeight();
         }
-//        setPadding(getPaddingLeft(), getPaddingTop() + mTopVisibleHeight, getPaddingRight(), getPaddingBottom());
-    }
-
-
-    @Override
-    public void onScrolled(int dx, int dy) {
-        super.onScrolled(dx, dy);
     }
 
 
@@ -166,9 +112,44 @@ public class IBUTouchRecyclerView extends RecyclerView {
         return super.dispatchTouchEvent(ev);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        return super.onTouchEvent(e);
-    }
+
+//    @Override
+//    public boolean fling(int velocityX, int velocityY) {
+//        final LayoutManager lm = getLayoutManager();
+//
+//        if (lm instanceof ISnappyLayoutManager) {
+//            super.smoothScrollToPosition(((ISnappyLayoutManager) getLayoutManager())
+//                    .getPositionForVelocity(velocityX, velocityY));
+//            return true;
+//        }
+//        return super.fling(velocityX, velocityY);
+//    }
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent e) {
+//        // We want the parent to handle all touch events--there's a lot going on there,
+//        // and there is no reason to overwrite that functionality--bad things will happen.
+//        final boolean ret = super.onTouchEvent(e);
+//        final LayoutManager lm = getLayoutManager();
+//
+//        if (lm instanceof ISnappyLayoutManager
+//                && (e.getAction() == MotionEvent.ACTION_UP ||
+//                e.getAction() == MotionEvent.ACTION_CANCEL)
+//                && getScrollState() == SCROLL_STATE_IDLE) {
+//            // The layout manager is a SnappyLayoutManager, which means that the
+//            // children should be snapped to a grid at the end of a drag or
+//            // fling. The motion event is either a user lifting their finger or
+//            // the cancellation of a motion events, so this is the time to take
+//            // over the scrolling to perform our own functionality.
+//            // Finally, the scroll state is idle--meaning that the resultant
+//            // velocity after the user's gesture was below the threshold, and
+//            // no fling was performed, so the view may be in an unaligned state
+//            // and will not be flung to a proper state.
+//            smoothScrollToPosition(((ISnappyLayoutManager) lm).getFixScrollPos());
+//        }
+//
+//        return ret;
+//    }
+
 
 }
