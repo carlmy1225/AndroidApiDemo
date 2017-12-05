@@ -117,7 +117,6 @@
         <attr name="pageLeftPercent" format="float" />
         <attr name="pageShowPercent" format="float" />
         <attr name="pageEnableScroll" format="boolean" />
-        <attr name="pageScrollInterceptor" format="string" />
     </declare-styleable>
 
 </resources>

@@ -1,24 +1,21 @@
 package com.jwj.demo.androidapidemo.custom_view.page;
 
-import android.animation.ArgbEvaluator;
-import android.annotation.TargetApi;
-import android.os.Build;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.jwj.demo.androidapidemo.R;
 
-public class WelcomePageActivity extends ActionBarActivity {
+public class WelcomePageActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener {
 
     PageAdapter pageAdapter;
     ViewPager mPager;
     PageContainer pageContainer;
     PageIndicatorView pageIndicatorView;
-    SparseArray<int[]> mLayoutViewIdsMap = new SparseArray<int[]>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,73 +27,69 @@ public class WelcomePageActivity extends ActionBarActivity {
 
         pageAdapter = new PageAdapter(this);
         mPager.setAdapter(pageAdapter);
-        //mPager.setPageTransformer(true, new ParallaxTransformer(PARALLAX_COEFFICIENT, DISTANCE_COEFFICIENT));
-        mPager.addOnPageChangeListener(pageContainer);
+        mPager.addOnPageChangeListener(this);
         pageIndicatorView.setViewPager(mPager);
     }
 
-    class ParallaxTransformer implements ViewPager.PageTransformer {
-
-        float parallaxCoefficient;
-        float distanceCoefficient;
-
-        public ParallaxTransformer(float parallaxCoefficient, float distanceCoefficient) {
-            this.parallaxCoefficient = parallaxCoefficient;
-            this.distanceCoefficient = distanceCoefficient;
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        pageContainer.onPageScrolled(position, positionOffset, positionOffsetPixels);
+        float percent = position + positionOffset - 2;
+        if (percent > 0) {
+            percent = (1 - percent) / 2f;
+            if (percent < 0) {
+                percent = 0;
+            }
+            ViewCompat.setAlpha(pageIndicatorView, percent);
         }
+    }
 
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-        @Override
-        public void transformPage(View page, float position) {
-            float scrollXOffset = page.getWidth() * parallaxCoefficient;
+    @Override
+    public void onPageSelected(int position) {
 
-            ViewGroup pageViewWrapper = (ViewGroup) page;
-            @SuppressWarnings("SuspiciousMethodCalls")
-            int[] layer = mLayoutViewIdsMap.get(pageViewWrapper.getChildAt(0).getId());
-            for (int id : layer) {
-                View view = page.findViewById(id);
-                if (view != null) {
-                    view.setTranslationX(scrollXOffset * position);
-                }
-                scrollXOffset *= distanceCoefficient;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        if (mPager.getCurrentItem() == pageAdapter.getCount() - 1) {
+            startAnimation(pageAdapter.getLastView());
+        } else if (mPager.getCurrentItem() == pageAdapter.getCount() - 2 && state == ViewPager.SCROLL_STATE_IDLE) {
+            final View view = pageAdapter.getLastView();
+            if (view != null) {
+                final View brandTv = view.findViewById(R.id.new_brand_tv);
+                final View logo = view.findViewById(R.id.logo);
+                final View openBtn = view.findViewById(R.id.open_btn);
+                brandTv.setAlpha(0);
+                logo.setAlpha(0);
+                openBtn.setAlpha(0);
             }
         }
     }
 
-    class GuidePageChangeListener implements ViewPager.OnPageChangeListener {
 
-        ArgbEvaluator mColorEvaluator;
+    private void startAnimation(final View view) {
+        if (view == null) return;
 
-        int mPageWidth, mTotalScrollWidth;
+        final View brandTv = view.findViewById(R.id.new_brand_tv);
+        final View logo = view.findViewById(R.id.logo);
+        final View openBtn = view.findViewById(R.id.open_btn);
 
-        int mGuideStartBackgroundColor, mGuideEndBackgroundColor;
+        if (brandTv.getAlpha() != 0) return;  //滑动始终停在这个页面，不要重复触发动画
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 1f);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float alpha = (float) animation.getAnimatedValue();
+                ViewCompat.setAlpha(logo, alpha);
 
-        String[] mGuideTips;
-
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-        public GuidePageChangeListener() {
-            mColorEvaluator = new ArgbEvaluator();
-
-            mPageWidth = getWindowManager().getDefaultDisplay().getWidth();
-            mTotalScrollWidth = mPageWidth * pageAdapter.getCount();
-        }
-
-        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            float ratio = (mPageWidth * position + positionOffsetPixels) / (float) mTotalScrollWidth;
-            Integer color = (Integer) mColorEvaluator.evaluate(ratio, mGuideStartBackgroundColor, mGuideEndBackgroundColor);
-            mPager.setBackgroundColor(color);
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            if (mGuideTips != null && mGuideTips.length > position) {
+                if (alpha > 0.2f) {
+                    ViewCompat.setAlpha(brandTv, (alpha - 0.2f) / 0.8f);
+                    ViewCompat.setAlpha(openBtn, (alpha - 0.2f) / 0.8f);
+                }
             }
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-        }
+        });
+        valueAnimator.setDuration(800);
+        valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        valueAnimator.start();
     }
 }

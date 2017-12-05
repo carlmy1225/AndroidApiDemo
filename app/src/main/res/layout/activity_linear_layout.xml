@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:divider="@drawable/line_dvider"
+    android:showDividers="middle"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="山东老费劲死了省略掉三打两建路上的减肥
+        了圣诞节老实交代雷锋精神多了几分历史" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="山东老费劲死了省略掉三打两建路上的减肥
+        了圣诞节老实交代雷锋精神多了几分历史" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="山东老费劲死了省略掉三打两建路上的减肥
+        了圣诞节老实交代雷锋精神多了几分历史" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="山东老费劲死了省略掉三打两建路上的减肥
+        了圣诞节老实交代雷锋精神多了几分历史" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="山东老费劲死了省略掉三打两建路上的减肥
+        了圣诞节老实交代雷锋精神多了几分历史" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="山东老费劲死了省略掉三打两建路上的减肥
+        了圣诞节老实交代雷锋精神多了几分历史" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="山东老费劲死了省略掉三打两建路上的减肥
+        了圣诞节老实交代雷锋精神多了几分历史" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="山东老费劲死了省略掉三打两建路上的减肥
+        了圣诞节老实交代雷锋精神多了几分历史" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:src="@drawable/line_dvider" />
+
+</LinearLayout>

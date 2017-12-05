@@ -59,6 +59,10 @@ public class PageIndicatorView extends LinearLayout implements ViewPager.OnPageC
 
     }
 
+    /**
+     * 可以优化的点，就是动态的增删，而不是全部remove后，重新添加
+     * @param count
+     */
     public void updateIndicator(int count) {
         removeAllViews();
         LinearLayout.LayoutParams margin = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
