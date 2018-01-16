@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.jwj.demo.androidapidemo.performance.cpu.CpuProcess;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,6 +51,8 @@ public class MainActivity extends ListActivity {
                 return convertView;
             }
         });
+
+        CpuProcess.getCpuInfo();
     }
 
 
