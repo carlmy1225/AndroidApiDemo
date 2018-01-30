@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/container"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/top_bg_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/myctrip_bg_home" />
+
+
+    <TextView
+        android:id="@+id/singapore_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Singapore"
+        android:textColor="#dddddd"
+        app:layout_constraintTop_toBottomOf="@+id/top_bg_view"
+        app:layout_editor_absoluteX="10dp" />
+
+    <TextView
+        android:id="@+id/label_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#dddddd"
+        android:text="Camera"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/camera_type"
+        app:layout_constraintTop_toBottomOf="@+id/singapore_title"
+        app:layout_constraintLeft_toLeftOf="@+id/container" />
+
+    <EditText
+        android:id="@+id/camera_type"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:text="山莨菪碱三打两建三打两建"
+        app:layout_constraintLeft_toRightOf="@+id/label_one"
+        app:layout_constraintTop_toBottomOf="@+id/singapore_title" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:text="Settings"
+        android:textColor="#dddddd"
+        app:layout_constraintBaseline_toBaselineOf="@+id/setting_type"
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="302dp" />
+
+    <EditText
+        android:id="@+id/setting_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="山莨菪碱三打两建三打两建"
+        app:layout_constraintTop_toBottomOf="@+id/camera_type"
+        app:layout_constraintLeft_toLeftOf="@+id/camera_type" />
+
+
+</android.support.constraint.ConstraintLayout>
