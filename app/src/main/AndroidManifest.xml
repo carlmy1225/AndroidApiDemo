@@ -63,7 +63,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".custom_view.ScrollViewAct"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".widget.TestSysViewAct"
             android:screenOrientation="portrait" />
@@ -76,6 +77,9 @@
             android:name=".graphic.camera.CameraActivity"
             android:label="@string/title_activity_camera"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Main2Activity" />
+        <activity android:name=".layout.LinearLayoutActivity" />
+        <activity android:name=".struct.StructActivity"></activity>
     </application>
 
 </manifest>

@@ -29,6 +29,11 @@ public class BaseAct extends FragmentActivity {
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onAttachedToWindow");

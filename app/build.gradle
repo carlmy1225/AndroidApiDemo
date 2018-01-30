@@ -33,6 +33,7 @@ ext {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -42,4 +43,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:recyclerview-v7:25.0.0'
     compile 'com.airbnb.android:lottie:2.2.0'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.android.installreferrer:installreferrer:1.0'
+    compile "io.reactivex.rxjava2:rxjava:2.1.0"
+
 }

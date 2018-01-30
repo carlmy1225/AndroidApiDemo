@@ -11,6 +11,7 @@
         android:layout_height="39dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="160dp"
+        android:alpha="0"
         android:src="@mipmap/myctrip_home_ctrip_icon" />
 
     <TextView
@@ -20,16 +21,19 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/logo"
         android:layout_marginTop="17dp"
+        android:alpha="0"
         android:text="Ctrip's new global brand"
         android:textColor="#97C3FF"
         android:textSize="17sp" />
 
     <TextView
+        android:id="@+id/open_btn"
         android:layout_marginTop="150dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/new_brand_tv"
         android:layout_centerHorizontal="true"
+        android:alpha="0"
         android:background="@drawable/my_demo_cn_btn_bg"
         android:text="Open the new 6.0"
         android:paddingLeft="36dp"

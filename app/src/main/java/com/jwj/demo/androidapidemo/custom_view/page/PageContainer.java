@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +20,7 @@ import com.jwj.demo.androidapidemo.util.DensityUtil;
  * Copyright: Ctrip
  */
 
-public class PageContainer extends FrameLayout implements ViewPager.OnPageChangeListener {
+public class PageContainer extends FrameLayout {
 
     final int SCREEN_RATE = 3;   //占屏幕的几倍宽
     float bottomPercent = 0.6f;
@@ -121,7 +120,6 @@ public class PageContainer extends FrameLayout implements ViewPager.OnPageChange
     }
 
 
-    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         Log.v("pageScroll", "positionOffset =" + positionOffset + " offsetPixels =" + positionOffsetPixels);
         int childCount = getChildCount();
@@ -134,15 +132,6 @@ public class PageContainer extends FrameLayout implements ViewPager.OnPageChange
         }
     }
 
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {

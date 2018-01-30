@@ -22,6 +22,8 @@ public class PageAdapter extends PagerAdapter {
             "Covering the whole world \n Self return change", "Covering the whole world \n Self return change"};
     int count;
     Context context;
+    View lastView;
+
 
     public PageAdapter(Context context) {
         this.context = context;
@@ -42,6 +44,9 @@ public class PageAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         if (object instanceof View) {
             container.removeView((View) object);
+            if (lastView == object) {
+                lastView = null;
+            }
         }
     }
 
@@ -50,6 +55,7 @@ public class PageAdapter extends PagerAdapter {
         if (position == count - 1) {
             View view = LayoutInflater.from(context).inflate(R.layout.myctrip_welcome_page_last_item, null);
             container.addView(view);
+            lastView = view;
             return view;
         } else {
             View view = LayoutInflater.from(context).inflate(R.layout.myctrip_welcome_page_text_item, null);
@@ -60,5 +66,9 @@ public class PageAdapter extends PagerAdapter {
             container.addView(view);
             return view;
         }
+    }
+
+    public View getLastView() {
+        return lastView;
     }
 }
