@@ -75,7 +75,9 @@
         <activity android:name=".graphic.GraphicTestAct" />
         <activity android:name=".Main2Activity" />
         <activity android:name=".layout.LinearLayoutActivity" />
-        <activity android:name=".struct.StructActivity"></activity>
+        <activity android:name=".struct.StructActivity" />
+        <activity android:name=".layout.DrawerLayoutActivity"></activity>
+        <activity android:name=".layout.ToolbarActivity"></activity>
     </application>
 
 </manifest>
