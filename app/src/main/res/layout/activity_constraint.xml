@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.jwj.demo.androidapidemo.constraint_library.ConstraintActivity">
+
+    <Button
+        android:id="@+id/buttonA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/guide_line"
+        android:layout_marginStart="10dp"
+        android:text="ButtonA" />
+
+    <Button
+        android:id="@+id/buttonB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_goneMarginStart="10dp"
+        app:layout_constraintLeft_toRightOf="@+id/buttonA"
+        android:layout_marginLeft="20dp"
+        android:textColor="#1380D6"
+        android:text="ButtonB" />
+
+
+    <Button
+        android:id="@+id/button_c"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/buttonA"
+        android:text="ButtonC" />
+
+
+    <include layout="@layout/constraint_library_include" />
+
+</android.support.constraint.ConstraintLayout>

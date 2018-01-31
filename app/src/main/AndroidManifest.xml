@@ -80,8 +80,10 @@
         <activity android:name=".Main2Activity" />
         <activity android:name=".layout.LinearLayoutActivity" />
         <activity android:name=".struct.StructActivity" />
-        <activity android:name=".layout.DrawerLayoutActivity"></activity>
-        <activity android:name=".layout.ToolbarActivity"></activity>
+        <activity android:name=".layout.DrawerLayoutActivity" />
+        <activity android:name=".layout.ToolbarActivity" />
+        <activity android:name=".constraint_library.LayoutDesignActivity" />
+        <activity android:name=".constraint_library.ConstraintActivity"></activity>
     </application>
 
 </manifest>
