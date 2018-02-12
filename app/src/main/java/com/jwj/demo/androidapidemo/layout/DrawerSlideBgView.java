@@ -37,10 +37,15 @@ public class DrawerSlideBgView extends View {
         path = new Path();
     }
 
-    public void setTouchY(float y) {
+    public void setTouchY(float y,float percent) {
+        float width = getWidth() * percent;
+        float x = width /2;
+        float offset = getHeight() /8;
         path.reset();
-        path.lineTo(0, -getHeight());
-        path.rQuadTo(getWidth(), y, 0, getHeight() * 3);
+        path.lineTo(x, -offset);
+        path.quadTo(width * 3/2, y, x, getHeight() + offset);
+        path.lineTo(0,getHeight());
+
         path.close();
         invalidate();
     }

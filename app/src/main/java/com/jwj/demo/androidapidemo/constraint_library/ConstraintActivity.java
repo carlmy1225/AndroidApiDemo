@@ -28,6 +28,12 @@ public class ConstraintActivity extends AppCompatActivity {
         guideline = (Guideline) findViewById(R.id.guide_line);
     }
 
+    private void initToolBar(){
+
+
+    }
+
+
     private void checkMarginGoneAttr() {
         Button button = (Button) findViewById(R.id.buttonB);
         button.setOnClickListener(new View.OnClickListener() {

@@ -68,13 +68,13 @@ public class CustomDrawerLayout extends DrawerLayout implements DrawerLayout.Dra
     }
 
 
-    public void setTouchXY() {
-        drawerSlideBgView.setTouchY(motionY);
+    public void setTouchXY(float percent) {
+        drawerSlideBgView.setTouchY(motionY,percent);
     }
 
     @Override
     public void onDrawerSlide(View drawerView, float slideOffset) {
-        setTouchXY();
+        setTouchXY(slideOffset);
     }
 
     @Override
