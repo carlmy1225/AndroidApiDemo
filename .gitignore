@@ -4,6 +4,7 @@
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
+.test.txt
 .DS_Store
 /build
 /captures
