@@ -12,7 +12,7 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <!-- 副标题的颜色 -->
-        <item name="android:textColorSecondary"></item>
+        <item name="android:textColorSecondary">#fff</item>
 
 
     </style>

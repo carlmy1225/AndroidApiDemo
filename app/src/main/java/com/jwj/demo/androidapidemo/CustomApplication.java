@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
 
+import com.jwj.demo.androidapidemo.model.User;
+import com.jwj.demo.androidapidemo.struct.aspectJ.Role;
+
 /**
  * Description: 描述
  * Author: wjxie
@@ -13,9 +16,18 @@ import android.os.Bundle;
 
 public class CustomApplication extends Application {
 
+    private User user;
+
+    static CustomApplication application;
+
+
     @Override
     public void onCreate() {
         super.onCreate();
+        application = this;
+        initUser();
+
+
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
@@ -54,5 +66,18 @@ public class CustomApplication extends Application {
         });
     }
 
+    private void initUser(){
+        user = new User();
+        user.name = "jwj";
+        user.role = Role.MANAGER;
+    }
 
+
+    public static CustomApplication getApplication(){
+        return application;
+    }
+
+    public User getUser() {
+        return user;
+    }
 }

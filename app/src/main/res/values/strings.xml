@@ -15,4 +15,5 @@
     <string name="key.myctrip.enter.hotels" value="酒店">酒店</string>
     <string name="key.myctrip.enter.trains" value="火車票">火車票</string>
     <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_aspect_j">AspectJActivity</string>
 </resources>

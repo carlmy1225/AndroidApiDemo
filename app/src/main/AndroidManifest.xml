@@ -76,14 +76,18 @@
         <activity
             android:name=".graphic.camera.CameraActivity"
             android:label="@string/title_activity_camera"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Main2Activity" />
         <activity android:name=".layout.LinearLayoutActivity" />
         <activity android:name=".struct.StructActivity" />
         <activity android:name=".layout.DrawerLayoutActivity" />
         <activity android:name=".layout.ToolbarActivity" />
         <activity android:name=".constraint_library.LayoutDesignActivity" />
-        <activity android:name=".constraint_library.ConstraintActivity"></activity>
+        <activity android:name=".constraint_library.ConstraintActivity" />
+        <activity
+            android:name=".struct.aspectJ.AspectJActivity"
+            android:label="@string/title_activity_aspect_j"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
